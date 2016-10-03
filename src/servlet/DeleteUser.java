@@ -9,22 +9,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/login")
-public class Login extends HttpServlet {
-	private static final long serialVersionUID = 1L;
 
-    public Login() {
-        super(); 
+@WebServlet("/DeleteUser")
+public class DeleteUser extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    public DeleteUser() {
+        super();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		String name = request.getParameter("username");
 		PrintWriter out = response.getWriter();
-		out.print(name);
-		out.close();
-		
+		out.print("Delete User");
+		out.close(); 
 	}
+
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
