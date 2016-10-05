@@ -45,7 +45,7 @@ public class DatabaseConnection {
 		String query = "UPDATE accounts SET logged_in = 0 WHERE logged_in = 1";
 		//String query = "SELECT * FROM ACCOUNTS";
 		try {
-			st.executeQuery(query);
+			st.executeUpdate(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -3,6 +3,8 @@ package authenticator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import Exceptions.AuthenticationError;
+
 public class Authenticator implements IAuthenticator{
 
 	public void create_account(String name, String pwd1, String pwd2) {
@@ -23,9 +25,10 @@ public class Authenticator implements IAuthenticator{
 		
 	}
 	
-	public Account login(String name, String pwd) {
+	public Account login(String name, String pwd) throws AuthenticationError {
 		// TODO Auto-generated method stub
-		return null;
+		throw new AuthenticationError();
+		//return null;
 	}
 
 	public void logout(Account acc) {
