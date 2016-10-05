@@ -16,7 +16,6 @@ public class Account implements IAccount {
 	public String getUsername() {
 		return username;
 	}
-
 	
 	public String getPassword() {
 		return password;
