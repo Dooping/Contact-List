@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Exceptions.AuthenticationError;
+import database.DatabaseConnection;
 
 public class Authenticator implements IAuthenticator{
 
@@ -32,13 +33,14 @@ public class Authenticator implements IAuthenticator{
 	}
 
 	public void logout(Account acc) {
-		// TODO Auto-generated method stub
-		
+		DatabaseConnection db = new DatabaseConnection();
+		db.logout();
 	}
 	
-	public Account login(HttpServletRequest req, HttpServletResponse resp) {
+	public Account login(HttpServletRequest req, HttpServletResponse resp) throws AuthenticationError {
 		// TODO Auto-generated method stub
-		return null;
+		throw new AuthenticationError();
+		//return null;
 	}
 
 }
