@@ -3,8 +3,8 @@ package authenticator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import Exceptions.AuthenticationError;
-import Exceptions.EmptyFieldException;
+import exceptions.AuthenticationError;
+import exceptions.EmptyFieldException;
 
 public interface IAuthenticator {
 	
