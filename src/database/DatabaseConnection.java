@@ -6,9 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import authenticator.Account;
+import authenticator.IAccount;
+import exceptions.AuthenticationError;
+import exceptions.LockedAccount;
+import exceptions.UndefinedAccount;
 
 
-public class DatabaseConnection {
+public final class DatabaseConnection {
 
 	private static final String URL = "jdbc:mysql://localhost/SS";
 	private static final String USER = "root";
@@ -16,7 +21,7 @@ public class DatabaseConnection {
 	private static final String REMOVE_SSL_WARING = "?useSSL=false";
 
 
-	private Statement connection(){
+	private static Statement connection(){
 		Connection connection = null;
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
@@ -31,7 +36,7 @@ public class DatabaseConnection {
 		return null;
 	}
 
-	public boolean createUser(String username, String password){
+	public static boolean createUser(String username, String password){
 		boolean result = false;
 		Statement st = connection();
 		String insertQuery = "INSERT INTO accounts values ('"+username+"','"+password+"',0,0);";
@@ -49,27 +54,10 @@ public class DatabaseConnection {
 		}
 		return result;
 	}
-	
-	public boolean hasUsername(String username){
-		String u = null;
-		Statement st = connection();
-		 
-		String query = "SELECT name, pwdhash, logged_in, locked FROM accounts WHERE name = '"+username+"'";
-		
-		try {
-			ResultSet rs = st.executeQuery(query);
-			u = rs.getString("name");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return u != null ? true : false;
-		
-	}
 
-	public void logout(){
+	public static void logout(IAccount acc){
 		Statement st = connection();
-		String query = "UPDATE accounts SET logged_in = 0 WHERE logged_in = 1";
+		String query = "UPDATE accounts SET logged_in = 0 WHERE name = "+acc.getUsername();
 		try {
 			st.executeUpdate(query);
 		} catch (SQLException e) {
@@ -83,6 +71,50 @@ public class DatabaseConnection {
 		}
 	}
 
+	public static void login(IAccount acc) throws AuthenticationError{
+		Statement st = connection();
+		String query = "UPDATE accounts SET logged_in = 1 WHERE (name = '"
+				+ acc.getUsername() + "' AND pwdhash = '" + acc.getPassword() + "')";
+		
+		try {
+			st.executeUpdate(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new AuthenticationError();
+		} finally {
+			try {
+				st.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static Account getAccount(String name) throws UndefinedAccount{
+		Statement st = connection();
+		String query = "SELECT * FROM accounts WHERE name = "+name;
+		try {
+			st.executeUpdate(query);
+			ResultSet set = st.getResultSet();
+			if(!set.first())
+				throw new UndefinedAccount();
+			String accName = set.getString("name");
+			String accPwd = set.getString("pwdhash");
+			Boolean accLocked = set.getBoolean("locked");
+			Boolean accLogged = set.getBoolean("logged_in");
+			Account acc = new Account(accName, accPwd, accLogged, accLocked);
+			return acc;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				st.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
 
 
 }

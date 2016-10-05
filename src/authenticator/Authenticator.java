@@ -3,18 +3,13 @@ package authenticator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import database.DatabaseConnection;
 import exceptions.AuthenticationError;
-import exceptions.EmptyFieldException;
 
 public class Authenticator implements IAuthenticator{
 
-	public void create_account(String name, String pwd1, String pwd2) throws EmptyFieldException {
-		if(name.length() == 0 || pwd1.length() == 0 || pwd2.length() == 0 ){
-			throw new EmptyFieldException();
-		} else {
-			//do something	
-		}
-
+	public void create_account(String name, String pwd1, String pwd2) {
+		// TODO Auto-generated method stub
 		
 	}
 	public void delete_account(String name) {
@@ -32,19 +27,23 @@ public class Authenticator implements IAuthenticator{
 	}
 	
 	public Account login(String name, String pwd) throws AuthenticationError {
-		// TODO Auto-generated method stub
-		throw new AuthenticationError();
-		//return null;
+		try{
+			Account acc = new Account(name, AESencrp.encrypt(pwd),true, false);
+			DatabaseConnection.login(acc);
+			return acc;
+		} catch(Exception e){
+			throw new AuthenticationError();
+		}
 	}
 
 	public void logout(Account acc) {
-		// TODO Auto-generated method stub
-		
+		DatabaseConnection.logout(acc);
 	}
 	
-	public Account login(HttpServletRequest req, HttpServletResponse resp) {
+	public Account login(HttpServletRequest req, HttpServletResponse resp) throws AuthenticationError {
 		// TODO Auto-generated method stub
-		return null;
+		throw new AuthenticationError();
+		//return null;
 	}
 
 }
