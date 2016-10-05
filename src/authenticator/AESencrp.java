@@ -6,7 +6,7 @@ import javax.crypto.*;
 import javax.crypto.spec.*;
 import java.util.Base64.*;
 
-public class AESencrp {
+public final class AESencrp {
   private static final String ALGO = "AES";
   private static final byte[] keyValue = 
   new byte[] { 'T', 'h', 'e', 'B', 'e', 's', '7', 'S', '$', 'c', 'r','e', 't', 'K', 'e', 'y' };
@@ -33,7 +33,7 @@ public static String encrypt(String Data) throws Exception {
         return key;
 }
 
-    public static void main(String[] args) throws Exception {
+    /*public static void main(String[] args) throws Exception {
 
         String password = "salt"+"my_passwd_$";
         String passwordEnc = AESencrp.encrypt(password);
@@ -44,7 +44,7 @@ public static String encrypt(String Data) throws Exception {
         System.out.println("Encrypted Text : " + passwordEnc);
         System.out.println("Encrypted Text : " + passwordEnc1);
         System.out.println("Decrypted Text : " + passwordDec);
-    }
+    }*/
 
 
 }
