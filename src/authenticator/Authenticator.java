@@ -3,8 +3,8 @@ package authenticator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import Exceptions.AuthenticationError;
 import database.DatabaseConnection;
+import exceptions.AuthenticationError;
 
 public class Authenticator implements IAuthenticator{
 
@@ -27,14 +27,17 @@ public class Authenticator implements IAuthenticator{
 	}
 	
 	public Account login(String name, String pwd) throws AuthenticationError {
-		// TODO Auto-generated method stub
-		throw new AuthenticationError();
-		//return null;
+		try{
+			Account acc = new Account(name, AESencrp.encrypt(pwd),true, false);
+			DatabaseConnection.login(acc);
+			return acc;
+		} catch(Exception e){
+			throw new AuthenticationError();
+		}
 	}
 
 	public void logout(Account acc) {
-		DatabaseConnection db = new DatabaseConnection();
-		db.logout();
+		DatabaseConnection.logout(acc);
 	}
 	
 	public Account login(HttpServletRequest req, HttpServletResponse resp) throws AuthenticationError {

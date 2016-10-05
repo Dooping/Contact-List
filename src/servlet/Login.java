@@ -7,8 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import Exceptions.AuthenticationError;
 import authenticator.*;
+import exceptions.AuthenticationError;
 
 @WebServlet("/Login")
 public class Login extends HttpServlet {
