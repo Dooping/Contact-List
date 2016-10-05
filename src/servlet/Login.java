@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -30,7 +31,8 @@ public class Login extends HttpServlet {
 			IAccount authUser = authenticator.login(aname, apwd);
 			session.setAttribute(USER, authUser.getUsername());
 			session.setAttribute(PWD, authUser.getPassword());
-			// continue with authenticated user (redirect?)
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/home.html");
+	        requestDispatcher.forward(request, response);
 		} catch (AuthenticationError e) {
 			// handle authentication error
 		}
