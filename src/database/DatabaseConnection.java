@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 
+
 public class DatabaseConnection {
 
 	private static final String URL = "jdbc:mysql://localhost/SS";
@@ -47,6 +48,23 @@ public class DatabaseConnection {
 			}
 		}
 		return result;
+	}
+	
+	public boolean hasUsername(String username){
+		String u = null;
+		Statement st = connection();
+		 
+		String query = "SELECT name, pwdhash, logged_in, locked FROM accounts WHERE name = '"+username+"'";
+		
+		try {
+			ResultSet rs = st.executeQuery(query);
+			u = rs.getString("name");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return u != null ? true : false;
+		
 	}
 
 	public void logout(){
