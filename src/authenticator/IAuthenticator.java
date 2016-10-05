@@ -8,6 +8,7 @@ import Exceptions.EmptyFieldException;
 
 public interface IAuthenticator {
 	
+	void create_account(String name, String pwd1, String pwd2);
 	void create_account(String name, String pwd1, String pwd2) throws EmptyFieldException;
 	void delete_account(String name);
 	Account get_account(String name);
