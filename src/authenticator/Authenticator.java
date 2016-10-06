@@ -2,6 +2,7 @@ package authenticator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import database.DatabaseConnection;
 import exceptions.UserAlreadyExistsException;
@@ -50,14 +51,23 @@ public class Authenticator implements IAuthenticator{
 
 	}
 
-	public Account login(String name, String pwd) throws AuthenticationError {
+	public Account login(String name, String pwd) throws AuthenticationError, UndefinedAccount, WrongConfirmationPasswordException {
 		try{
-			Account acc = new Account(name, AESencrp.encrypt(pwd),true, false);
+			Account acc = DatabaseConnection.getAccount(name);
+			if(!AESencrp.encrypt(pwd).equals(acc.getPassword()))
+				throw new WrongConfirmationPasswordException();
 			DatabaseConnection.login(acc);
 			return acc;
-		} catch(Exception e){
+		} catch(AuthenticationError e){
 			throw new AuthenticationError();
+		} catch (UndefinedAccount e) {
+			throw new UndefinedAccount();
+		} catch (WrongConfirmationPasswordException e) {
+			throw new WrongConfirmationPasswordException();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		return null;
 	}
 
 	public void logout(Account acc) {
@@ -65,7 +75,7 @@ public class Authenticator implements IAuthenticator{
 	}
 
 	public Account login(HttpServletRequest req, HttpServletResponse resp) throws AuthenticationError {
-		// TODO Auto-generated method stub
+		HttpSession session = request.getSession(true);
 		throw new AuthenticationError();
 		//return null;
 	}

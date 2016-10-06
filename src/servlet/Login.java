@@ -9,6 +9,8 @@ import javax.servlet.http.*;
 
 import authenticator.*;
 import exceptions.AuthenticationError;
+import exceptions.UndefinedAccount;
+import exceptions.WrongConfirmationPasswordException;
 
 @WebServlet("/Login")
 public class Login extends HttpServlet {
@@ -35,6 +37,10 @@ public class Login extends HttpServlet {
 	        requestDispatcher.forward(request, response);
 		} catch (AuthenticationError e) {
 			// handle authentication error
+		} catch (UndefinedAccount e) {
+
+		} catch (WrongConfirmationPasswordException e) {
+
 		}
 	}
 	public void doPost(
