@@ -39,9 +39,9 @@ public final class DatabaseConnection {
 	public static boolean createUser(String username, String password){
 		boolean result = false;
 		Statement st = connection();
-		String insertQuery = "INSERT INTO accounts values ('"+username+"','"+password+"',0,0);";
+		String createUserQuery = "INSERT INTO accounts values ('"+username+"','"+password+"',0,0);";
 		try {
-			st.executeUpdate(insertQuery);
+			st.executeUpdate(createUserQuery);
 			result = true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -51,6 +51,19 @@ public final class DatabaseConnection {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}
+		return result;
+	}
+	
+	public static boolean deleteUser(String username){
+		boolean result = false;
+		Statement st = connection();
+		String deleteUserQuery = "DELETE FROM accounts WHERE name = '"+username+"';";
+		try {
+			st.executeUpdate(deleteUserQuery);
+			result = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return result;
 	}
