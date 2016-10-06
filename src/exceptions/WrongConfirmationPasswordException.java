@@ -1,6 +1,6 @@
 package exceptions;
 
-public class UndefinedAccount extends Exception {
+public class WrongConfirmationPasswordException extends Exception{
 
 	private static final long serialVersionUID = 1L;
 
