@@ -15,8 +15,8 @@ import exceptions.WrongConfirmationPasswordException;
 @WebServlet("/Login")
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	  private static final String USER = "username";
-	  private static final String PWD = "password";
+	  public static final String USER = "username";
+	  public static final String PWD = "password";
 	  
 	  public Login() {
 	        super();

@@ -11,6 +11,7 @@ import exceptions.EmptyFieldException;
 import exceptions.UndefinedAccount;
 import exceptions.UserNotCreatedException;
 import exceptions.WrongConfirmationPasswordException;
+import servlet.Login;
 
 public class Authenticator implements IAuthenticator{
 
@@ -72,10 +73,20 @@ public class Authenticator implements IAuthenticator{
 		DatabaseConnection.logout(acc);
 	}
 
-	public Account login(HttpServletRequest req, HttpServletResponse resp) throws AuthenticationError {
-		HttpSession session = request.getSession(true);
-		throw new AuthenticationError();
-		//return null;
+	public Account login(HttpServletRequest req, HttpServletResponse resp) throws AuthenticationError, UndefinedAccount, WrongConfirmationPasswordException {
+		HttpSession session = req.getSession(false);
+		if(session == null)
+			throw new AuthenticationError();
+		
+		String username = (String)session.getAttribute(Login.USER);
+		String pwdhash = (String)session.getAttribute(Login.PWD);
+		String pwd = null;
+		try {
+			pwd = AESencrp.decrypt(pwdhash);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return login(username, pwd);
 	}
 
 }

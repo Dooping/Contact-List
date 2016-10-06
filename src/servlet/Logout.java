@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 
 import authenticator.*;
 import exceptions.AuthenticationError;
+import exceptions.UndefinedAccount;
+import exceptions.WrongConfirmationPasswordException;
 
 
 @WebServlet("/Logout")
@@ -37,6 +39,12 @@ public class Logout extends HttpServlet {
 		} catch (AuthenticationError e) {
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/login.html");
 			requestDispatcher.forward(request, response);
+		} catch (UndefinedAccount e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (WrongConfirmationPasswordException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

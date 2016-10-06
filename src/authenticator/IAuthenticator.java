@@ -18,5 +18,5 @@ public interface IAuthenticator {
 	void change_pwd(String name, String pwd1, String pwd2);
 	Account login(String name, String pwd) throws AuthenticationError, UndefinedAccount, WrongConfirmationPasswordException;
 	void logout(Account acc);
-	Account login(HttpServletRequest req, HttpServletResponse resp) throws AuthenticationError;
+	Account login(HttpServletRequest req, HttpServletResponse resp) throws AuthenticationError, UndefinedAccount, WrongConfirmationPasswordException;
 }

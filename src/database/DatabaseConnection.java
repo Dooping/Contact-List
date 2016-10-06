@@ -105,9 +105,10 @@ public final class DatabaseConnection {
 	
 	public static Account getAccount(String name) throws UndefinedAccount{
 		Statement st = connection();
-		String query = "SELECT * FROM accounts WHERE name = "+name;
+		String query = "SELECT * FROM accounts WHERE name = '"+name+"'";
 		try {
-			st.executeUpdate(query);
+//			st.executeQuery(query);
+			st.executeQuery(query);
 			ResultSet set = st.getResultSet();
 			if(!set.first())
 				throw new UndefinedAccount();
