@@ -19,9 +19,7 @@ public class Authenticator implements IAuthenticator{
 		if(name.length() == 0 || pwd1.length() == 0 || pwd2.length() == 0 ){
 			throw new EmptyFieldException();
 		} else {
-			IAccount account;
-			account = DatabaseConnection.getAccount(name);
-			
+			IAccount account = DatabaseConnection.getAccount(name);
 			if ( account != null ){
 				throw new UserAlreadyExistsException();
 			} else {
