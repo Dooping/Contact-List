@@ -67,6 +67,19 @@ public final class DatabaseConnection {
 		}
 		return result;
 	}
+	
+	public static boolean changePassword(String username, String password){
+		boolean result = false;
+		Statement st = connection();
+		String changePasswordQuery = "UPDATE accounts SET pwdhash = '"+password+"' WHERE name = '"+username+"'";
+		try {
+			st.executeUpdate(changePasswordQuery);
+			result = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 	public static void logout(IAccount acc){
 		Statement st = connection();
