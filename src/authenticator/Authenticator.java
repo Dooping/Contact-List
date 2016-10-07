@@ -6,10 +6,13 @@ import javax.servlet.http.HttpSession;
 
 import database.DatabaseConnection;
 import exceptions.UserAlreadyExistsException;
+import exceptions.UserNotLockedException;
 import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
 import exceptions.UndefinedAccount;
 import exceptions.UserNotCreatedException;
+import exceptions.UserNotDeletedException;
+import exceptions.UserNotExistsException;
 import exceptions.WrongConfirmationPasswordException;
 import servlet.Login;
 
@@ -35,9 +38,32 @@ public class Authenticator implements IAuthenticator{
 		
 	}
 
-	public void delete_account(String name) {
-		// TODO Auto-generated method stub
-
+	public void delete_account(String name) throws EmptyFieldException, UserNotExistsException, UserNotLockedException ,Exception{
+		/*
+	 	• deleted account should be deleted from the associated persistent storage
+		• preconditions
+		• the account cannot be logged in
+		• the account must be locked (so no one will authenticate on the way) 
+		 */
+		
+		if(name.length()== 0)
+			throw new EmptyFieldException();
+		
+		IAccount account = DatabaseConnection.getAccount(name);
+		
+		
+		if(account==null)
+			throw new UserNotExistsException();
+		
+		
+		if(!account.isLocked())
+			throw new UserNotLockedException();
+		
+		// FALTA VERIFICAR SE ESTA LOGADO OU NAO 
+		
+		if(!DatabaseConnection.deleteUser(name))
+			throw new UserNotDeletedException();
+		
 	}
 	public Account get_account(String name) {
 		// TODO Auto-generated method stub

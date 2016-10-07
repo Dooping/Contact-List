@@ -1,7 +1,6 @@
 package servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,16 +8,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.plaf.synth.SynthSeparatorUI;
 
 import authenticator.IAuthenticator;
-import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotCreatedException;
 import exceptions.WrongConfirmationPasswordException;
 import authenticator.Authenticator;
-import authenticator.IAccount;
 
 @WebServlet("/CreateUser")
 public class CreateUser extends HttpServlet {
@@ -51,7 +47,7 @@ public class CreateUser extends HttpServlet {
 			RedirectError(request, response, "Exception Error");
 		} 
 		
-		// Não sei se é o correcto, mas talvez não 
+		// Não sei se é o correcto
 		response.sendRedirect("/Authenticator/home.html");
 		
 
@@ -63,7 +59,7 @@ public class CreateUser extends HttpServlet {
 
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
 		request.setAttribute("errorMessage", errorMessage);
-		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/createusererrormessage.jsp");
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/errormessage.jsp");
 		requestDispatcher.forward(request, response);
 	}
 
