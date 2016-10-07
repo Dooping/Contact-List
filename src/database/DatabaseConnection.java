@@ -107,11 +107,11 @@ public final class DatabaseConnection {
 		Statement st = connection();
 		String query = "SELECT * FROM accounts WHERE name = '"+name+"'";
 		try {
-//			st.executeQuery(query);
 			st.executeQuery(query);
 			ResultSet set = st.getResultSet();
 			if(!set.first())
-				throw new UndefinedAccount();
+				//throw new UndefinedAccount();
+				return null;
 			String accName = set.getString("name");
 			String accPwd = set.getString("pwdhash");
 			Boolean accLocked = set.getBoolean("locked");
