@@ -34,38 +34,29 @@ public class Authenticator implements IAuthenticator{
 						
 			if(!DatabaseConnection.createUser(name, pwd1))
 				throw new UserNotCreatedException();
-		}
-			
-		
+		}	
 		
 	}
 
 	public void delete_account(String name) throws EmptyFieldException, UserNotExistsException, UserNotLockedException ,Exception{
-		/*
-	 	• deleted account should be deleted from the associated persistent storage
-		• preconditions
-		• the account cannot be logged in
-		• the account must be locked (so no one will authenticate on the way) 
-		 */
 		
 		if(name.length()== 0)
 			throw new EmptyFieldException();
 		
-		IAccount account = DatabaseConnection.getAccount(name);
-		
-		
-		if(account==null)
+		try{
+			IAccount account = DatabaseConnection.getAccount(name);
+
+			if(!account.isLocked())
+				throw new UserNotLockedException();
+			
+			// FALTA VERIFICAR SE ESTA LOGADO OU NAO 
+			
+			if(!DatabaseConnection.deleteUser(name))
+				throw new UserNotDeletedException();
+			
+		} catch (UndefinedAccount e){
 			throw new UserNotExistsException();
-		
-		
-		if(!account.isLocked())
-			throw new UserNotLockedException();
-		
-		// FALTA VERIFICAR SE ESTA LOGADO OU NAO 
-		
-		if(!DatabaseConnection.deleteUser(name))
-			throw new UserNotDeletedException();
-		
+		}
 	}
 	public Account get_account(String name) {
 		// TODO Auto-generated method stub

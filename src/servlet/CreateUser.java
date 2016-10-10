@@ -52,7 +52,6 @@ public class CreateUser extends HttpServlet {
 			RedirectError(request, response, "Exception Error");
 		} 
 		
-		
 
 	}
 
