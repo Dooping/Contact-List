@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import authenticator.Authenticator;
 import authenticator.IAuthenticator;
 import exceptions.EmptyFieldException;
+import exceptions.UserIsLoggedInException;
 import exceptions.UserNotLockedException;
 import exceptions.UserNotExistsException;
 
@@ -39,6 +40,8 @@ public class DeleteUser extends HttpServlet {
 			RedirectError(request, response, "User not exists");
 		} catch(UserNotLockedException e) {
 			RedirectError(request, response, "User is not locked");
+		} catch(UserIsLoggedInException e){
+			RedirectError(request, response, "User is logged in");
 		} catch (Exception e) {
 			RedirectError(request, response, "Exception error");
 		}

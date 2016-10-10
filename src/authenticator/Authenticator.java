@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import database.DatabaseConnection;
 import exceptions.UserAlreadyExistsException;
+import exceptions.UserIsLoggedInException;
 import exceptions.UserNotLockedException;
 import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
@@ -24,7 +25,7 @@ public class Authenticator implements IAuthenticator{
 			throw new EmptyFieldException();
 	
 		try{
-			DatabaseConnection.getAccount(name);
+			this.get_account(name);
 			throw new UserAlreadyExistsException();
 		} catch(UndefinedAccount e) {
 			if(!pwd1.equals(pwd2))
@@ -44,13 +45,13 @@ public class Authenticator implements IAuthenticator{
 			throw new EmptyFieldException();
 		
 		try{
-			IAccount account = DatabaseConnection.getAccount(name);
-
+			IAccount account = this.get_account(name);
 			if(!account.isLocked())
 				throw new UserNotLockedException();
 			
-			// FALTA VERIFICAR SE ESTA LOGADO OU NAO 
-			
+			if(account.isLoggedIn())
+				throw new UserIsLoggedInException();
+				
 			if(!DatabaseConnection.deleteUser(name))
 				throw new UserNotDeletedException();
 			
@@ -58,9 +59,8 @@ public class Authenticator implements IAuthenticator{
 			throw new UserNotExistsException();
 		}
 	}
-	public Account get_account(String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public Account get_account(String name) throws UndefinedAccount {
+		return DatabaseConnection.getAccount(name);
 	}
 
 	public void change_pwd(String name, String pwd1, String pwd2) {
@@ -70,7 +70,7 @@ public class Authenticator implements IAuthenticator{
 
 	public Account login(String name, String pwd) throws AuthenticationError, UndefinedAccount, WrongConfirmationPasswordException {
 		try{
-			Account acc = DatabaseConnection.getAccount(name);
+			Account acc = this.get_account(name);
 			if(!AESencrp.encrypt(pwd).equals(acc.getPassword()))
 				throw new WrongConfirmationPasswordException();
 			DatabaseConnection.login(acc);
