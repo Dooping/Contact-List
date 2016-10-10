@@ -20,6 +20,7 @@ import exceptions.WrongConfirmationPasswordException;
 @WebServlet("/Logout")
 public class Logout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	  public static final String LOGOUT = "logout";
 
 	public Logout() {
 		super();
@@ -37,8 +38,8 @@ public class Logout extends HttpServlet {
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/home.html");
 			requestDispatcher.forward(request, response);
 		} catch (AuthenticationError e) {
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/login.html");
-			requestDispatcher.forward(request, response);
+			request.getSession().setAttribute("origin", LOGOUT);
+			response.sendRedirect("/Authenticator/login.html");
 		} catch (UndefinedAccount e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import authenticator.Authenticator;
 import authenticator.IAuthenticator;
+import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
 import exceptions.UserNotLockedException;
 import exceptions.UserNotExistsException;
@@ -19,6 +20,7 @@ import exceptions.UserNotExistsException;
 @WebServlet("/DeleteUser")
 public class DeleteUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	  public static final String DELETEUSER = "delete_user";
        
     public DeleteUser() {
         super();
@@ -31,6 +33,7 @@ public class DeleteUser extends HttpServlet {
 		IAuthenticator authenticator = new Authenticator();
 		
 		try {
+			authenticator.login(request,response);
 			authenticator.delete_account(aname);
 			response.sendRedirect("/Authenticator/home.html");
 		} catch (EmptyFieldException e) {
@@ -39,7 +42,10 @@ public class DeleteUser extends HttpServlet {
 			RedirectError(request, response, "User not exists");
 		} catch(UserNotLockedException e) {
 			RedirectError(request, response, "User is not locked");
-		} catch (Exception e) {
+		} catch (AuthenticationError e) {
+			request.getSession().setAttribute("origin", DELETEUSER);
+			response.sendRedirect("/Authenticator/login.html");
+		}catch (Exception e) {
 			RedirectError(request, response, "Exception error");
 		}
 		

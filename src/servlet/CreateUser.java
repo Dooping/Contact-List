@@ -20,6 +20,7 @@ import authenticator.Authenticator;
 @WebServlet("/CreateUser")
 public class CreateUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	  public static final String CREATEUSER = "create_user";
 
 	public CreateUser() {
 		super();
@@ -47,6 +48,7 @@ public class CreateUser extends HttpServlet {
 		} catch (UserNotCreatedException e) {
 			RedirectError(request, response, "User not created");
 		} catch (AuthenticationError e) {
+			request.getSession().setAttribute("origin", CREATEUSER);
 			response.sendRedirect("/Authenticator/login.html");
 		} catch (Exception e) {
 			RedirectError(request, response, "Exception Error");
