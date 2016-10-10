@@ -43,16 +43,12 @@ public class DeleteUser extends HttpServlet {
 			RedirectError(request, response, "User not exists");
 		} catch(UserNotLockedException e) {
 			RedirectError(request, response, "User is not locked");
-<<<<<<< HEAD
 		} catch(UserIsLoggedInException e){
 			RedirectError(request, response, "User is logged in");
-		} catch (Exception e) {
-=======
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", DELETEUSER);
 			response.sendRedirect("/Authenticator/login.html");
 		}catch (Exception e) {
->>>>>>> 06b698f56829045e9ac25b266c076f3060368652
 			RedirectError(request, response, "Exception error");
 		}
 		
