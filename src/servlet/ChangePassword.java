@@ -32,9 +32,9 @@ public class ChangePassword extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		IAuthenticator authenticator = new Authenticator();
-
 		try {
 			authenticator.login(request, response);
+			response.sendRedirect("/Authenticator/changepassword.html");
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", CHANGEPASSWORD);
 			response.sendRedirect("/Authenticator/login.html");

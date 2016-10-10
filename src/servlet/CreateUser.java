@@ -31,6 +31,7 @@ public class CreateUser extends HttpServlet {
 		IAuthenticator authenticator = new Authenticator();
 		try {
 			authenticator.login(request, response);
+			response.sendRedirect("/Authenticator/createuser.html");
 		} catch (WrongConfirmationPasswordException e) {
 			RedirectError(request, response, "Password confirmation did not match with the password");
 		} catch (AuthenticationError e) {

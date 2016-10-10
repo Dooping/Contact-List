@@ -33,6 +33,7 @@ public class DeleteUser extends HttpServlet {
 		
 		try {
 			authenticator.login(request,response);
+			response.sendRedirect("/Authenticator/deleteuser.html");
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", DELETEUSER);
 			response.sendRedirect("/Authenticator/login.html");
