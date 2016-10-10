@@ -33,7 +33,17 @@ public class Login extends HttpServlet {
 			IAccount authUser = authenticator.login(aname, apwd);
 			session.setAttribute(USER, authUser.getUsername());
 			session.setAttribute(PWD, authUser.getPassword());
+			String origin = (String)request.getSession().getAttribute("origin");
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/home.html");
+			if (origin != null)
+				switch (origin){
+				case Logout.LOGOUT: requestDispatcher = request.getRequestDispatcher("/Logout");
+				break;
+				case CreateUser.CREATEUSER: requestDispatcher = request.getRequestDispatcher("/createuser.html");
+				break;
+				case DeleteUser.DELETEUSER: requestDispatcher = request.getRequestDispatcher("/deleteuser.html");
+				break;
+				}
 	        requestDispatcher.forward(request, response);
 		} catch (AuthenticationError e) {
 			e.printStackTrace();
