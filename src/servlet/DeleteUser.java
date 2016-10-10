@@ -29,6 +29,21 @@ public class DeleteUser extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		IAuthenticator authenticator = new Authenticator();
+		
+		try {
+			authenticator.login(request,response);
+		} catch (AuthenticationError e) {
+			request.getSession().setAttribute("origin", DELETEUSER);
+			response.sendRedirect("/Authenticator/login.html");
+		}catch (Exception e) {
+			RedirectError(request, response, "Exception error");
+		}
+		
+	}
+
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String aname = request.getParameter("username");
 		
 		IAuthenticator authenticator = new Authenticator();
@@ -51,12 +66,6 @@ public class DeleteUser extends HttpServlet {
 		}catch (Exception e) {
 			RedirectError(request, response, "Exception error");
 		}
-		
-	}
-
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
 	}
 	
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{

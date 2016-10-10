@@ -43,7 +43,11 @@ public class Login extends HttpServlet {
 				break;
 				case DeleteUser.DELETEUSER: requestDispatcher = request.getRequestDispatcher("/deleteuser.html");
 				break;
+				case ChangePassword.CHANGEPASSWORD: requestDispatcher = request.getRequestDispatcher("/changepassword.html");
+				break;
 				}
+			else
+				System.out.println("ajkhdfa");
 	        requestDispatcher.forward(request, response);
 		} catch (AuthenticationError e) {
 			e.printStackTrace();

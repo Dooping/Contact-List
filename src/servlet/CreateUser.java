@@ -28,7 +28,21 @@ public class CreateUser extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		IAuthenticator authenticator = new Authenticator();
+		try {
+			authenticator.login(request, response);
+		} catch (WrongConfirmationPasswordException e) {
+			RedirectError(request, response, "Password confirmation did not match with the password");
+		} catch (AuthenticationError e) {
+			request.getSession().setAttribute("origin", CREATEUSER);
+			response.sendRedirect("/Authenticator/login.html");
+		} catch (Exception e) {
+			RedirectError(request, response, "Exception Error");
+		} 
+		
+	}
 
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String aname = request.getParameter("username");
 		String apwd1 = request.getParameter("password");
 		String apwd2 = request.getParameter("password_confirmation");
@@ -53,12 +67,6 @@ public class CreateUser extends HttpServlet {
 		} catch (Exception e) {
 			RedirectError(request, response, "Exception Error");
 		} 
-		
-
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
 	}
 
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
