@@ -32,6 +32,7 @@ public class DeleteUser extends HttpServlet {
 		
 		try {
 			authenticator.delete_account(aname);
+			response.sendRedirect("/Authenticator/home.html");
 		} catch (EmptyFieldException e) {
 			RedirectError(request, response, "You need to fill all the fields");
 		} catch (UserNotExistsException e) {
@@ -42,8 +43,6 @@ public class DeleteUser extends HttpServlet {
 			RedirectError(request, response, "Exception error");
 		}
 		
-		// Não sei se é o correcto
-		response.sendRedirect("/Authenticator/home.html");
 	}
 
 
