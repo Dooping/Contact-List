@@ -10,6 +10,7 @@ import exceptions.UserIsLoggedInException;
 import exceptions.UserNotLockedException;
 import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
+import exceptions.PasswordNotChangedException;
 import exceptions.UndefinedAccount;
 import exceptions.UserNotCreatedException;
 import exceptions.UserNotDeletedException;
@@ -63,8 +64,26 @@ public class Authenticator implements IAuthenticator{
 		return DatabaseConnection.getAccount(name);
 	}
 
-	public void change_pwd(String name, String pwd1, String pwd2) {
-		// TODO Auto-generated method stub
+	public void change_pwd(String name, String pwd1, String pwd2) throws EmptyFieldException, WrongConfirmationPasswordException, PasswordNotChangedException {
+		
+		System.out.println("name: "+name);
+		if(name.length() == 0 || pwd1.length() == 0 || pwd2.length() == 0)
+			throw new EmptyFieldException();
+		
+		if (!pwd1.equals(pwd2))
+			throw new WrongConfirmationPasswordException();
+		
+		String password = null;
+		try {
+			password = AESencrp.encrypt(pwd1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(!DatabaseConnection.changePassword(name, password))
+			 throw new PasswordNotChangedException();
+		
+		
 
 	}
 
@@ -79,8 +98,6 @@ public class Authenticator implements IAuthenticator{
 			throw new AuthenticationError();
 		} catch (UndefinedAccount e) {
 			throw new UndefinedAccount();
-		} catch (WrongConfirmationPasswordException e) {
-			throw new WrongConfirmationPasswordException();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
