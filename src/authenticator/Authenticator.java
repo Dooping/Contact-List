@@ -107,6 +107,8 @@ public class Authenticator implements IAuthenticator{
 		
 		String username = (String)session.getAttribute(Login.USER);
 		String pwdhash = (String)session.getAttribute(Login.PWD);
+		if (username == null || pwdhash == null)
+			throw new AuthenticationError();
 		String pwd = null;
 		try {
 			pwd = AESencrp.decrypt(pwdhash);

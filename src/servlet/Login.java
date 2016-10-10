@@ -36,11 +36,11 @@ public class Login extends HttpServlet {
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/home.html");
 	        requestDispatcher.forward(request, response);
 		} catch (AuthenticationError e) {
-			// handle authentication error
+			e.printStackTrace();
 		} catch (UndefinedAccount e) {
-
+			e.printStackTrace();
 		} catch (WrongConfirmationPasswordException e) {
-
+			e.printStackTrace();
 		}
 	}
 	public void doPost(

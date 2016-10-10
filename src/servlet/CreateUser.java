@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import authenticator.IAuthenticator;
+import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotCreatedException;
@@ -21,7 +22,7 @@ public class CreateUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public CreateUser() {
-		super(); 
+		super();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -34,6 +35,7 @@ public class CreateUser extends HttpServlet {
 		IAuthenticator authenticator = new Authenticator();
 
 		try {
+			authenticator.login(request, response);
 			authenticator.create_account(aname, apwd1, apwd2);
 			response.sendRedirect("/Authenticator/home.html");
 		} catch (EmptyFieldException e) {
@@ -44,6 +46,8 @@ public class CreateUser extends HttpServlet {
 			RedirectError(request, response, "Password confirmation did not match with the password");
 		} catch (UserNotCreatedException e) {
 			RedirectError(request, response, "User not created");
+		} catch (AuthenticationError e) {
+			response.sendRedirect("/Authenticator/login.html");
 		} catch (Exception e) {
 			RedirectError(request, response, "Exception Error");
 		} 

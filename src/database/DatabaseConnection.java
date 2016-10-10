@@ -83,7 +83,7 @@ public final class DatabaseConnection {
 
 	public static void logout(IAccount acc){
 		Statement st = connection();
-		String query = "UPDATE accounts SET logged_in = 0 WHERE name = "+acc.getUsername();
+		String query = "UPDATE accounts SET logged_in = 0 WHERE name = '"+acc.getUsername()+"'";
 		try {
 			st.executeUpdate(query);
 		} catch (SQLException e) {
