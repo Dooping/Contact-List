@@ -35,6 +35,7 @@ public class CreateUser extends HttpServlet {
 
 		try {
 			authenticator.create_account(aname, apwd1, apwd2);
+			response.sendRedirect("/Authenticator/home.html");
 		} catch (EmptyFieldException e) {
 			RedirectError(request, response, "You need to fill all the fields");
 		} catch (UserAlreadyExistsException e) {
@@ -47,8 +48,6 @@ public class CreateUser extends HttpServlet {
 			RedirectError(request, response, "Exception Error");
 		} 
 		
-		// Não sei se é o correcto
-		response.sendRedirect("/Authenticator/home.html");
 		
 
 	}

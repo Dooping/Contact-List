@@ -23,18 +23,20 @@ public class Authenticator implements IAuthenticator{
 		if(name.length() == 0 || pwd1.length() == 0 || pwd2.length() == 0 )
 			throw new EmptyFieldException();
 	
-		IAccount account = DatabaseConnection.getAccount(name);
-			
-		if (account!=null)
+		try{
+			DatabaseConnection.getAccount(name);
 			throw new UserAlreadyExistsException();
+		} catch(UndefinedAccount e) {
+			if(!pwd1.equals(pwd2))
+				throw new WrongConfirmationPasswordException();
 			
-		if(!pwd1.equals(pwd2))
-			throw new WrongConfirmationPasswordException();
+			pwd1 = AESencrp.encrypt(pwd1);
+						
+			if(!DatabaseConnection.createUser(name, pwd1))
+				throw new UserNotCreatedException();
+		}
+			
 		
-		pwd1 = AESencrp.encrypt(pwd1);
-					
-		if(!DatabaseConnection.createUser(name, pwd1))
-			throw new UserNotCreatedException();
 		
 	}
 

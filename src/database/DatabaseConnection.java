@@ -123,8 +123,7 @@ public final class DatabaseConnection {
 			st.executeQuery(query);
 			ResultSet set = st.getResultSet();
 			if(!set.first())
-				//throw new UndefinedAccount();
-				return null;
+				throw new UndefinedAccount();
 			String accName = set.getString("name");
 			String accPwd = set.getString("pwdhash");
 			Boolean accLocked = set.getBoolean("locked");
