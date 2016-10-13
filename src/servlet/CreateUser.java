@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import authenticator.IAuthenticator;
 import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
+import exceptions.UndefinedAccount;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotCreatedException;
 import exceptions.WrongConfirmationPasswordException;
@@ -65,6 +66,8 @@ public class CreateUser extends HttpServlet {
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", CREATEUSER);
 			response.sendRedirect("/Authenticator/login.html");
+		} catch (UndefinedAccount e) {
+			RedirectError(request, response, "Undefined Account");
 		} catch (Exception e) {
 			RedirectError(request, response, "Exception Error");
 		} 

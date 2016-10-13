@@ -50,17 +50,23 @@ public class Login extends HttpServlet {
 				System.out.println("ajkhdfa");
 	        requestDispatcher.forward(request, response);
 		} catch (AuthenticationError e) {
-			e.printStackTrace();
+			RedirectError(request, response, "Authentication Error");
 		} catch (UndefinedAccount e) {
-			e.printStackTrace();
+			RedirectError(request, response, "Account does not exist");
 		} catch (WrongConfirmationPasswordException e) {
-			e.printStackTrace();
+			RedirectError(request, response, "Wrong Password");
 		}
 	}
 	public void doPost(
 			HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
+	}
+
+	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
+		request.setAttribute("errorMessage", errorMessage);
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/errormessage.jsp");
+		requestDispatcher.forward(request, response);
 	}
 
 }

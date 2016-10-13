@@ -13,8 +13,10 @@ import authenticator.Authenticator;
 import authenticator.IAuthenticator;
 import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
+import exceptions.UndefinedAccount;
 import exceptions.UserIsLoggedInException;
 import exceptions.UserNotLockedException;
+import exceptions.WrongConfirmationPasswordException;
 import exceptions.UserNotExistsException;
 
 
@@ -64,7 +66,11 @@ public class DeleteUser extends HttpServlet {
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", DELETEUSER);
 			response.sendRedirect("/Authenticator/login.html");
-		}catch (Exception e) {
+		} catch (UndefinedAccount e) {
+			RedirectError(request, response, "Undefined Account");
+		} catch (WrongConfirmationPasswordException e) {
+			RedirectError(request, response, "Wrong Password");
+		} catch (Exception e) {
 			RedirectError(request, response, "Exception error");
 		}
 	}
