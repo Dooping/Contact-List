@@ -8,8 +8,8 @@
 <a href="/Authenticator/" accesskey="1" title="">Home</a>
 		<h1>Login </h1>
 		<form name="loginform" action="/Authenticator/Login" method="POST">
-			Login <input type=“text" name="username" size=35”>
-  			Password <input type="password" name="password" size=35>
+			Login <input autofocus type=“text" name="username" size=35”>
+  			Password <input type="password" name="password"  onkeydown="if (event.keyCode == 13) { this.form.submit(); return false; }" size=35>
   			<input type="submit" value="submit">
 		</form>
 		
