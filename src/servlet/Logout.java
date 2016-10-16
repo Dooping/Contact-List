@@ -41,16 +41,20 @@ public class Logout extends HttpServlet {
 			request.getSession().setAttribute("origin", LOGOUT);
 			response.sendRedirect("/Authenticator/login.html");
 		} catch (UndefinedAccount e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			RedirectError(request, response, "Undefined Account");
 		} catch (WrongConfirmationPasswordException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			RedirectError(request, response, "Wrong Password");
 		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
+	}
+
+	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
+		request.setAttribute("errorMessage", errorMessage);
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/errormessage.jsp");
+		requestDispatcher.forward(request, response);
 	}
 
 }

@@ -5,9 +5,11 @@
 <title>Insert title here</title>
 </head>
 <body>
+<a href="/Authenticator/" accesskey="1" title="">Home</a>
+
 	<h3>Delete User</h3>
 	<form name="deleteuserform" action="/Authenticator/DeleteUser" method="POST">
-			Username <input type=“text" size=20” name="username"><br>
+			Username <input autofocus type=“text" size=20” name="username" onkeydown="if (event.keyCode == 13) { this.form.submit(); return false; }"><br>
   			<input type="submit" value="Delete"/>
 	</form>
 </body>

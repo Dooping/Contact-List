@@ -7,6 +7,8 @@
 <title>Error</title>
 </head>
 <body>
+<a href="/Authenticator/" accesskey="1" title="">Home</a>
+
 	<p> ${errorMessage} <p>
 </body>
 </html>
