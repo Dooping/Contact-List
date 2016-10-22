@@ -68,6 +68,16 @@ public final class DatabaseConnection {
 		return result;
 	}
 	
+	public static void lockedUser(String username){
+		Statement st = connection();
+		String lockUserQuery = "UPDATE accounts SET locked=1 WHERE name = '"+ username +"'";
+		try{
+			st.executeUpdate(lockUserQuery);
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
 	public static boolean changePassword(String username, String password){
 		boolean result = false;
 		Statement st = connection();

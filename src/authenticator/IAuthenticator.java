@@ -19,6 +19,7 @@ public interface IAuthenticator {
 	void delete_account(String name) throws EmptyFieldException, UserNotExistsException, UserNotLockedException, Exception;
 	Account get_account(String name) throws UndefinedAccount;
 	void change_pwd(String name, String pwd1, String pwd2) throws EmptyFieldException, WrongConfirmationPasswordException, PasswordNotChangedException;
+	void lock_user(String name) throws EmptyFieldException, UserNotExistsException;
 	Account login(String name, String pwd) throws AuthenticationError, UndefinedAccount, WrongConfirmationPasswordException;
 	void logout(Account acc);
 	Account login(HttpServletRequest req, HttpServletResponse resp) throws AuthenticationError, UndefinedAccount, WrongConfirmationPasswordException;

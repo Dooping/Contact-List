@@ -60,6 +60,21 @@ public class Authenticator implements IAuthenticator{
 			throw new UserNotExistsException();
 		}
 	}
+	
+	public void lock_user(String name) throws EmptyFieldException, UserNotExistsException {
+		if (name.length() == 0)
+			throw new EmptyFieldException();
+		
+		try{
+			IAccount account = this.get_account(name);
+			DatabaseConnection.lockedUser(name);
+		} catch(UndefinedAccount e){
+			throw new UserNotExistsException();
+		}
+		
+	}
+
+	
 	public Account get_account(String name) throws UndefinedAccount {
 		return DatabaseConnection.getAccount(name);
 	}
@@ -82,10 +97,9 @@ public class Authenticator implements IAuthenticator{
 		
 		if(!DatabaseConnection.changePassword(name, password))
 			 throw new PasswordNotChangedException();
-		
-		
-
 	}
+	
+	
 
 	public Account login(String name, String pwd) throws AuthenticationError, UndefinedAccount, WrongConfirmationPasswordException {
 		try{
