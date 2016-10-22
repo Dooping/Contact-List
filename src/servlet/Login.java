@@ -9,6 +9,7 @@ import javax.servlet.http.*;
 
 import authenticator.*;
 import exceptions.AuthenticationError;
+import exceptions.EmptyFieldException;
 import exceptions.UndefinedAccount;
 import exceptions.WrongConfirmationPasswordException;
 
@@ -28,6 +29,8 @@ public class Login extends HttpServlet {
 		try {
 			String aname = request.getParameter("username");
 			String apwd = request.getParameter("password");
+			if (aname.equals("") || apwd.equals(""))
+				throw new EmptyFieldException();
 			HttpSession session = request.getSession(true);
 			Authenticator authenticator = new Authenticator();
 			IAccount authUser = authenticator.login(aname, apwd);
@@ -37,26 +40,28 @@ public class Login extends HttpServlet {
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/home.html");
 			if (origin != null)
 				switch (origin){
-				case Logout.LOGOUT: requestDispatcher = request.getRequestDispatcher("/Logout");
+				case Logout.LOGOUT: response.sendRedirect("/Authenticator/Logout");
 				break;
-				case CreateUser.CREATEUSER: requestDispatcher = request.getRequestDispatcher("/createuser.html");
+				case CreateUser.CREATEUSER: response.sendRedirect("/Authenticator/CreateUser");
 				break;
-				case DeleteUser.DELETEUSER: requestDispatcher = request.getRequestDispatcher("/deleteuser.html");
+				case DeleteUser.DELETEUSER: response.sendRedirect("/Authenticator/DeleteUser");
 				break;
-				case ChangePassword.CHANGEPASSWORD: requestDispatcher = request.getRequestDispatcher("/changepassword.html");
+				case ChangePassword.CHANGEPASSWORD: response.sendRedirect("/Authenticator/ChangePassword");
 				break;
-				case LockUser.LOCKUSER: requestDispatcher = request.getRequestDispatcher("/lockuser.html");
+				case LockUser.LOCKUSER: response.sendRedirect("/Authenticator/LockUser");
 				break;
 				}
 			else
 				System.out.println("no origin");
-	        requestDispatcher.forward(request, response);
+	        //requestDispatcher.forward(request, response);
 		} catch (AuthenticationError e) {
 			RedirectError(request, response, "Authentication Error");
 		} catch (UndefinedAccount e) {
 			RedirectError(request, response, "Account does not exist");
 		} catch (WrongConfirmationPasswordException e) {
 			RedirectError(request, response, "Wrong Password");
+		} catch (EmptyFieldException e) {
+			RedirectError(request, response, "You need to fill all the fields");
 		}
 	}
 	public void doPost(

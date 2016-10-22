@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import authenticator.Account;
 import authenticator.Authenticator;
 import authenticator.IAuthenticator;
 import exceptions.AuthenticationError;
@@ -34,8 +35,11 @@ public class DeleteUser extends HttpServlet {
 		IAuthenticator authenticator = new Authenticator();
 		
 		try {
-			authenticator.login(request,response);
-			response.sendRedirect("/Authenticator/deleteuser.html");
+			Account acc = authenticator.login(request, response);
+			if (acc.getUsername().equals("root"))
+				response.sendRedirect("/Authenticator/deleteuser.html");
+			else
+				RedirectError(request, response, "Username " + acc.getUsername() + " can't delete users!");
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", DELETEUSER);
 			response.sendRedirect("/Authenticator/login.html");
@@ -52,9 +56,13 @@ public class DeleteUser extends HttpServlet {
 		IAuthenticator authenticator = new Authenticator();
 		
 		try {
-			authenticator.login(request,response);
-			authenticator.delete_account(aname);
-			RedirectSuccess(request, response, "User Deleted Successfully!");
+			Account acc = authenticator.login(request, response);
+			if (acc.getUsername().equals("root")){
+				authenticator.delete_account(aname);
+				RedirectSuccess(request, response, "User Deleted Successfully!");
+			}
+			else
+				RedirectError(request, response, "Username " + acc.getUsername() + " can't delete users!");
 		} catch (EmptyFieldException e) {
 			RedirectError(request, response, "You need to fill all the fields");
 		} catch (UserNotExistsException e) {

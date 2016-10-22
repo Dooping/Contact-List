@@ -34,7 +34,7 @@ public class ChangePassword extends HttpServlet {
 		IAuthenticator authenticator = new Authenticator();
 		try {
 			authenticator.login(request, response);
-			RedirectSuccess(request, response, "Password Changed Successfully!");
+			response.sendRedirect("/Authenticator/changepassword.html");
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", CHANGEPASSWORD);
 			response.sendRedirect("/Authenticator/login.html");
@@ -60,7 +60,7 @@ public class ChangePassword extends HttpServlet {
 			Account acc = authenticator.get_account(name);
 			session.setAttribute(Login.USER, acc.getUsername());
 			session.setAttribute(Login.PWD, acc.getPassword());
-			response.sendRedirect("/Authenticator/home.html");
+			RedirectSuccess(request, response, "Password Changed Successfully!");
 		} catch (EmptyFieldException e) {
 			RedirectError(request, response, "You need to fill all the fields");
 		} catch (WrongConfirmationPasswordException e) {

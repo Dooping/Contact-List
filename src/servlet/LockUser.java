@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import authenticator.Account;
 import authenticator.Authenticator;
 import authenticator.IAuthenticator;
 import exceptions.AuthenticationError;
@@ -30,8 +31,11 @@ public class LockUser extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		IAuthenticator authenticator = new Authenticator();
 		try {
-			authenticator.login(request, response);
-			response.sendRedirect("/Authenticator/lockuser.html");
+			Account acc = authenticator.login(request, response);
+			if (acc.getUsername().equals("root"))
+				response.sendRedirect("/Authenticator/lockuser.html");
+			else
+				RedirectError(request, response, "Username " + acc.getUsername() + " can't lock users!");
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", LOCKUSER);
 			response.sendRedirect("/Authenticator/login.html");
@@ -49,9 +53,13 @@ public class LockUser extends HttpServlet {
 		IAuthenticator authenticator = new Authenticator();
 		
 			try {
-				authenticator.login(request,response);
-				authenticator.lock_user(username);
-				RedirectSuccess(request, response, "User Locked Successfully!");
+				Account acc = authenticator.login(request, response);
+				if (acc.getUsername().equals("root")){
+					authenticator.lock_user(username);
+					RedirectSuccess(request, response, "User Locked Successfully!");
+				}
+				else
+					RedirectError(request, response, "Username " + acc.getUsername() + " can't lock users!");
 			} catch (AuthenticationError e) {
 				request.getSession().setAttribute("origin", LOCKUSER);
 				response.sendRedirect("/Authenticator/login.html");
