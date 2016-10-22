@@ -35,8 +35,7 @@ public class Logout extends HttpServlet {
 			authenticator.logout(authUser);
 			HttpSession session = request.getSession(false);
 			if(session != null) session.invalidate();
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/home.html");
-			requestDispatcher.forward(request, response);
+			RedirectSuccess(request, response, "Logout complete");
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", LOGOUT);
 			response.sendRedirect("/Authenticator/login.html");
@@ -54,6 +53,12 @@ public class Logout extends HttpServlet {
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
 		request.setAttribute("errorMessage", errorMessage);
 		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/errormessage.jsp");
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void RedirectSuccess(HttpServletRequest request, HttpServletResponse response, String successMessage) throws ServletException, IOException{
+		request.setAttribute("successMessage", successMessage);
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/successmessage.jsp");
 		requestDispatcher.forward(request, response);
 	}
 
