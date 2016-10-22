@@ -45,9 +45,11 @@ public class Login extends HttpServlet {
 				break;
 				case ChangePassword.CHANGEPASSWORD: requestDispatcher = request.getRequestDispatcher("/changepassword.html");
 				break;
+				case LockUser.LOCKUSER: requestDispatcher = request.getRequestDispatcher("/lockuser.html");
+				break;
 				}
 			else
-				System.out.println("ajkhdfa");
+				System.out.println("no origin");
 	        requestDispatcher.forward(request, response);
 		} catch (AuthenticationError e) {
 			RedirectError(request, response, "Authentication Error");

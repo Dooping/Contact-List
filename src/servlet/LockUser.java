@@ -51,7 +51,7 @@ public class LockUser extends HttpServlet {
 			try {
 				authenticator.login(request,response);
 				authenticator.lock_user(username);
-				response.sendRedirect("/Authenticator/home.html");
+				RedirectSuccess(request, response, "User Locked Successfully!");
 			} catch (AuthenticationError e) {
 				request.getSession().setAttribute("origin", LOCKUSER);
 				response.sendRedirect("/Authenticator/login.html");
@@ -69,6 +69,12 @@ public class LockUser extends HttpServlet {
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
 		request.setAttribute("errorMessage", errorMessage);
 		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/errormessage.jsp");
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void RedirectSuccess(HttpServletRequest request, HttpServletResponse response, String successMessage) throws ServletException, IOException{
+		request.setAttribute("successMessage", successMessage);
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/successmessage.jsp");
 		requestDispatcher.forward(request, response);
 	}
 

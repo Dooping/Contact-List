@@ -34,7 +34,7 @@ public class ChangePassword extends HttpServlet {
 		IAuthenticator authenticator = new Authenticator();
 		try {
 			authenticator.login(request, response);
-			response.sendRedirect("/Authenticator/changepassword.html");
+			RedirectSuccess(request, response, "Password Changed Successfully!");
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", CHANGEPASSWORD);
 			response.sendRedirect("/Authenticator/login.html");
@@ -79,6 +79,12 @@ public class ChangePassword extends HttpServlet {
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
 		request.setAttribute("errorMessage", errorMessage);
 		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/errormessage.jsp");
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void RedirectSuccess(HttpServletRequest request, HttpServletResponse response, String successMessage) throws ServletException, IOException{
+		request.setAttribute("successMessage", successMessage);
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/successmessage.jsp");
 		requestDispatcher.forward(request, response);
 	}
 

@@ -54,7 +54,7 @@ public class DeleteUser extends HttpServlet {
 		try {
 			authenticator.login(request,response);
 			authenticator.delete_account(aname);
-			response.sendRedirect("/Authenticator/home.html");
+			RedirectSuccess(request, response, "User Deleted Successfully!");
 		} catch (EmptyFieldException e) {
 			RedirectError(request, response, "You need to fill all the fields");
 		} catch (UserNotExistsException e) {
@@ -78,6 +78,12 @@ public class DeleteUser extends HttpServlet {
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
 		request.setAttribute("errorMessage", errorMessage);
 		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/errormessage.jsp");
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void RedirectSuccess(HttpServletRequest request, HttpServletResponse response, String successMessage) throws ServletException, IOException{
+		request.setAttribute("successMessage", successMessage);
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/successmessage.jsp");
 		requestDispatcher.forward(request, response);
 	}
 

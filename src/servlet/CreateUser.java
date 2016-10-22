@@ -54,7 +54,7 @@ public class CreateUser extends HttpServlet {
 		try {
 			authenticator.login(request, response);
 			authenticator.create_account(aname, apwd1, apwd2);
-			response.sendRedirect("/Authenticator/home.html");
+			RedirectSuccess(request, response, "User Created Successfully!");
 		} catch (EmptyFieldException e) {
 			RedirectError(request, response, "You need to fill all the fields");
 		} catch (UserAlreadyExistsException e) {
@@ -76,6 +76,12 @@ public class CreateUser extends HttpServlet {
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
 		request.setAttribute("errorMessage", errorMessage);
 		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/errormessage.jsp");
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void RedirectSuccess(HttpServletRequest request, HttpServletResponse response, String successMessage) throws ServletException, IOException{
+		request.setAttribute("successMessage", successMessage);
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/successmessage.jsp");
 		requestDispatcher.forward(request, response);
 	}
 
