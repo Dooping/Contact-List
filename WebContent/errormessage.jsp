@@ -9,6 +9,6 @@
 <body>
 <a href="/Authenticator/" accesskey="1" title="">Home</a>
 
-	<p> ${errorMessage} <p>
+	<p style="color:red;"> ${errorMessage} <p>
 </body>
 </html>
