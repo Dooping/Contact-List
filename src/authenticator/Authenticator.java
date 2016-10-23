@@ -66,7 +66,7 @@ public class Authenticator implements IAuthenticator{
 			throw new EmptyFieldException();
 		
 		try{
-			IAccount account = this.get_account(name);
+			this.get_account(name);
 			DatabaseConnection.lockedUser(name);
 		} catch(UndefinedAccount e){
 			throw new UserNotExistsException();
@@ -81,7 +81,6 @@ public class Authenticator implements IAuthenticator{
 
 	public void change_pwd(String name, String pwd1, String pwd2) throws EmptyFieldException, WrongConfirmationPasswordException, PasswordNotChangedException {
 		
-		System.out.println("name: "+name);
 		if(name.length() == 0 || pwd1.length() == 0 || pwd2.length() == 0)
 			throw new EmptyFieldException();
 		

@@ -35,7 +35,7 @@ public class Logout extends HttpServlet {
 			authenticator.logout(authUser);
 			HttpSession session = request.getSession(false);
 			if(session != null) session.invalidate();
-			RedirectSuccess(request, response, "Logout complete");
+			RedirectSuccess(request, response, "Logout complete!");
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", LOGOUT);
 			response.sendRedirect("/Authenticator/login.html");

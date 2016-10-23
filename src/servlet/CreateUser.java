@@ -16,6 +16,7 @@ import exceptions.UndefinedAccount;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotCreatedException;
 import exceptions.WrongConfirmationPasswordException;
+import authenticator.Account;
 import authenticator.Authenticator;
 
 @WebServlet("/CreateUser")
@@ -31,8 +32,11 @@ public class CreateUser extends HttpServlet {
 
 		IAuthenticator authenticator = new Authenticator();
 		try {
-			authenticator.login(request, response);
-			response.sendRedirect("/Authenticator/createuser.html");
+			Account acc = authenticator.login(request, response);
+			if (acc.getUsername().equals("root"))
+				response.sendRedirect("/Authenticator/createuser.html");
+			else
+				RedirectError(request, response, "Username " + acc.getUsername() + " can't create users!");
 		} catch (WrongConfirmationPasswordException e) {
 			RedirectError(request, response, "Password confirmation did not match with the password");
 		} catch (AuthenticationError e) {
@@ -52,9 +56,13 @@ public class CreateUser extends HttpServlet {
 		IAuthenticator authenticator = new Authenticator();
 
 		try {
-			authenticator.login(request, response);
-			authenticator.create_account(aname, apwd1, apwd2);
-			response.sendRedirect("/Authenticator/home.html");
+			Account acc = authenticator.login(request, response);
+			if (acc.getUsername().equals("root")){
+				authenticator.create_account(aname, apwd1, apwd2);
+				RedirectSuccess(request, response, "User Created Successfully!");
+			}
+			else
+				RedirectError(request, response, "Username " + acc.getUsername() + " can't create users!");
 		} catch (EmptyFieldException e) {
 			RedirectError(request, response, "You need to fill all the fields");
 		} catch (UserAlreadyExistsException e) {
@@ -76,6 +84,12 @@ public class CreateUser extends HttpServlet {
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
 		request.setAttribute("errorMessage", errorMessage);
 		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/errormessage.jsp");
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void RedirectSuccess(HttpServletRequest request, HttpServletResponse response, String successMessage) throws ServletException, IOException{
+		request.setAttribute("successMessage", successMessage);
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/successmessage.jsp");
 		requestDispatcher.forward(request, response);
 	}
 
