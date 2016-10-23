@@ -112,6 +112,8 @@ public class Authenticator implements IAuthenticator{
 			throw new AuthenticationError();
 		} catch (UndefinedAccount e) {
 			throw new UndefinedAccount();
+		} catch (WrongConfirmationPasswordException e) {
+			throw new WrongConfirmationPasswordException();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
