@@ -58,8 +58,12 @@ public class DeleteUser extends HttpServlet {
 		try {
 			Account acc = authenticator.login(request, response);
 			if (acc.getUsername().equals("root")){
+				if(aname.equals("root")){
+					RedirectError(request, response, "Cant remove root");
+				} else {
 				authenticator.delete_account(aname);
 				RedirectSuccess(request, response, "User Deleted Successfully!");
+				}
 			}
 			else
 				RedirectError(request, response, "Username " + acc.getUsername() + " can't delete users!");

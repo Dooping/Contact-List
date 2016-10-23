@@ -55,8 +55,12 @@ public class LockUser extends HttpServlet {
 			try {
 				Account acc = authenticator.login(request, response);
 				if (acc.getUsername().equals("root")){
-					authenticator.lock_user(username);
-					RedirectSuccess(request, response, "User Locked Successfully!");
+					if(username.equals("root")){
+						RedirectError(request, response, "Cant lock root");
+					} else {
+						authenticator.lock_user(username);
+						RedirectSuccess(request, response, "User Locked Successfully!");
+					}
 				}
 				else
 					RedirectError(request, response, "Username " + acc.getUsername() + " can't lock users!");
