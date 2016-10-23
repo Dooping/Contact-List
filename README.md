@@ -21,11 +21,13 @@ Caso não tenha o nome da base de dados , nome da tabela e campos da tabela coer
 	private static final String LOGGED_IN = "logged_in";
 	private static final String LOCKED = "locked";
 
+A base de dados deve ter, inicialmente, o utilizador com nome: root e uma password à escolha encriptada com a chave localizada na classe AESencrp. Por exemplo para a password: root a hash a inserir é: gxW1kVotAKZwkwRd74RVfA==
+
 
 # Testar a Aplicação #
 
 Para testar a aplicação pode utilizar dois tipos de user:
 	
-	Admin: ( name:root , password:root ) -> Este utilizador poderá fazer loggin, criar novos utilizadores, apagar utilizadores, mudar a sua password, bloquear utilizadores e fazer logout. 
+	Admin: ( name:root ) -> Este utilizador poderá fazer loggin, criar novos utilizadores, apagar utilizadores, mudar a sua password, bloquear utilizadores e fazer logout. 
 
 	Normal User: Este tipo de utilizador pode fazer loggin, logout e mudar a sua password
