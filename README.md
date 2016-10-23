@@ -1,6 +1,6 @@
 # Base de Dados #
  
-— INFORMAÇÕES SOBRE A BD 
+## INFORMAÇÕES SOBRE A BD ## 
 
 	- Programa: mySql
 	
