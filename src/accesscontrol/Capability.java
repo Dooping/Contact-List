@@ -14,6 +14,10 @@ public class Capability {
 		this.operation = operation;
 		this.time = time;
 	}
+	
+	public boolean isValid(){
+		return System.currentTimeMillis()<=time;
+	}
 
 	public String getOwner() {
 		return owner;
