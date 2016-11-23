@@ -27,9 +27,9 @@
       </tr>
     </thead>
     <tbody>
-     	<c:forEach items="${list}" var="acc">
-        	<tr id="elem" onclick="getTblContents('${acc.username}');" >
-            	<td id="username_${acc.username}">${acc.username}</td>
+     	<c:forEach items="${list}" var="name">
+        	<tr id="elem" onclick="getTblContents('${name}');" >
+            	<td id="username_${name}">${name}</td>
         	</tr>
 	    </c:forEach>
     </tbody>
