@@ -7,19 +7,34 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Contact List</title>
+<link href="<c:url value="css/main.css" />" rel="stylesheet">
 </head>
 <body>
-	<div> 
-		<h3> Contacts List </h3>
-	</div>
-	<div>
-		<table>
-	    	<c:forEach items="${list}" var="acc">
-	        	<tr>
-	            	<td>Username : ${acc.username}</td>
-	        	</tr>
-	    	</c:forEach>
-	     </table>
-	 </div>
+	<script type="text/javascript" >
+	    function getTblContents(username) {
+	      alert("Hello " + username);
+	    }
+	</script>
+	
+  <a href="/Authenticator/" accesskey="1" title="">Home</a>
+  
+  <h1>Contacts on the system</h1>
+  
+  <table class="center" cellspacing="0" cellpadding="0">
+    <thead>
+      <tr>
+        <th id="column_name"><span>Name</span></th>
+      </tr>
+    </thead>
+    <tbody>
+     	<c:forEach items="${list}" var="acc">
+        	<tr id="elem" onclick="getTblContents('${acc.username}');" >
+            	<td id="username_${acc.username}">${acc.username}</td>
+        	</tr>
+	    </c:forEach>
+    </tbody>
+  </table>
+ 
+ 
 </body>
 </html>
