@@ -2,9 +2,12 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 
 import authenticator.Account;
 import authenticator.IAccount;
@@ -30,12 +33,12 @@ public final class DatabaseConnection {
 	private static final String REMOVE_SSL_WARNING = "?useSSL=false";
 
 
-	private static Statement connection(){
+	private static Connection connection(){
 		Connection connection = null;
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager.getConnection(URL+REMOVE_SSL_WARNING, USER, PASSWORD);
-			return connection.createStatement();
+			return connection;
 
 		} catch (Exception e){
 			System.out.println("Connection failed");
@@ -46,17 +49,22 @@ public final class DatabaseConnection {
 
 	public static boolean createUser(String username, String password){
 		boolean result = false;
-		Statement st = connection();
-		//String createUserQuery = "INSERT INTO accounts values ('"+username+"','"+password+"',0,0);";
-		String createUserQuery = "INSERT INTO " + TABLE_NAME +" values ('"+username+"','"+password+"',0,0);";
+		Connection conn = connection();
+		String sql = "INSERT INTO " + TABLE_NAME +" values (?,?,0,0);";
+		
 		try {
-			st.executeUpdate(createUserQuery);
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, username);
+			st.setString(2, password);
+			st.executeUpdate();
 			result = true;
+			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				st.close();
+				if (conn != null)
+					conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -66,54 +74,89 @@ public final class DatabaseConnection {
 	
 	public static boolean deleteUser(String username){
 		boolean result = false;
-		Statement st = connection();
+		Connection conn = connection();
 		//String deleteUserQuery = "DELETE FROM accounts WHERE name = '"+username+"';";
-		String deleteUserQuery = "DELETE FROM "+ TABLE_NAME +" WHERE "+NAME+" = '"+username+"';";
+		String sql = "DELETE FROM "+ TABLE_NAME +" WHERE "+NAME+" = ?;";
 		try {
-			st.executeUpdate(deleteUserQuery);
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, username);
+			st.executeUpdate();
 			result = true;
+			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return result;
 	}
 	
 	public static void lockedUser(String username){
-		Statement st = connection();
+		Connection conn = connection();
 		//String lockUserQuery = "UPDATE accounts SET locked=1 WHERE name = '"+ username +"'";
-		String lockUserQuery = "UPDATE "+TABLE_NAME+" SET "+LOCKED+"=1 WHERE "+NAME+" = '"+ username +"'";
+		String sql = "UPDATE "+TABLE_NAME+" SET "+LOCKED+"=1 WHERE "+NAME+" = ?";
 		try{
-			st.executeUpdate(lockUserQuery);
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, username);
+			st.executeUpdate();
+			st.close();
 		} catch(SQLException e){
 			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	public static boolean changePassword(String username, String password){
 		boolean result = false;
-		Statement st = connection();
+		Connection conn = connection();
 		//String changePasswordQuery = "UPDATE accounts SET pwdhash = '"+password+"' WHERE name = '"+username+"'";
-		String changePasswordQuery = "UPDATE "+TABLE_NAME+" SET "+PWDHASH+" = '"+password+"' WHERE "+NAME+" = '"+username+"'";
+		String sql = "UPDATE "+TABLE_NAME+" SET "+PWDHASH+" = ? WHERE "+NAME+" = ?";
 		try {
-			st.executeUpdate(changePasswordQuery);
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, password);
+			st.setString(2, username);
+			st.executeUpdate();
 			result = true;
+			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return result;
 	}
 
 	public static void logout(IAccount acc){
-		Statement st = connection();
+		Connection conn = connection();
 		//String query = "UPDATE accounts SET logged_in = 0 WHERE name = '"+acc.getUsername()+"'";
-		String query = "UPDATE "+TABLE_NAME+" SET "+LOGGED_IN+" = 0 WHERE "+NAME+" = '"+acc.getUsername()+"'";
+		String sql = "UPDATE "+TABLE_NAME+" SET "+LOGGED_IN+" = 0 WHERE "+NAME+" = ?";
 		try {
-			st.executeUpdate(query);
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, acc.getUsername());
+			st.executeUpdate();
+			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				st.close();
+				if (conn != null)
+					conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -121,19 +164,23 @@ public final class DatabaseConnection {
 	}
 
 	public static void login(IAccount acc) throws AuthenticationError{
-		Statement st = connection();
+		Connection conn = connection();
 		//String query = "UPDATE accounts SET logged_in = 1 WHERE (name = '"+ acc.getUsername() + "' AND pwdhash = '" + acc.getPassword() + "')";
-		
-		String query = "UPDATE "+TABLE_NAME+" SET "+LOGGED_IN+" = 1 WHERE ("+NAME+" = '"
-				+ acc.getUsername() + "' AND "+PWDHASH+" = '" + acc.getPassword() + "')";
+		String sql = "UPDATE "+TABLE_NAME+" SET "+LOGGED_IN+" = 1 WHERE ("+NAME+" = ?"
+				+ " AND "+PWDHASH+" = ?)";
 		try {
-			st.executeUpdate(query);
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, acc.getUsername());
+			st.setString(2, acc.getPassword());
+			st.executeUpdate();
+			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new AuthenticationError();
 		} finally {
 			try {
-				st.close();
+				if (conn != null)
+					conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -141,12 +188,13 @@ public final class DatabaseConnection {
 	}
 	
 	public static Account getAccount(String name) throws UndefinedAccount{
-		Statement st = connection();
+		Connection conn = connection();
 		//String query = "SELECT * FROM accounts WHERE name = '"+name+"'";
-		String query = "SELECT * FROM "+TABLE_NAME+" WHERE "+NAME+" = '"+name+"'";
+		String sql = "SELECT * FROM "+TABLE_NAME+" WHERE "+NAME+" = ?";
 		try {
-			st.executeQuery(query);
-			ResultSet set = st.getResultSet();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, name);
+			ResultSet set = st.executeQuery();
 			if(!set.first())
 				throw new UndefinedAccount();
 			String accName = set.getString("name");
@@ -154,18 +202,136 @@ public final class DatabaseConnection {
 			Boolean accLocked = set.getBoolean("locked");
 			Boolean accLogged = set.getBoolean("logged_in");
 			Account acc = new Account(accName, accPwd, accLogged, accLocked);
+			st.close();
 			return acc;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				st.close();
+				if (conn != null)
+					conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 		return null;
 	}
+	
+	public static List<String> getFriends(String name) throws UndefinedAccount{
+		Connection conn = connection();
+		String sql = "select name from ((SELECT accepter as 'name' FROM friendships WHERE requester = ? and accepted = 1)"
+				+ "union "
+				+ "(SELECT requester as 'name' FROM friendships WHERE accepter = ? and accepted = 1)) as results"
+				+ "INNER JOIN accounts using (name) where accounts.locked = 0";
+
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, name);
+			st.setString(2, name);
+			ResultSet set = st.executeQuery();
+			List<String> friends = new LinkedList<String>();
+			while (set.next()) {
+				  String s = set.getString("name");
+				  friends.add(s);
+			}
+			return friends;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	public static List<String> getFriendRequests(String name) throws UndefinedAccount{
+		Connection conn = connection();
+		String sql = "select requester as 'name' from friendships where accepter = ? and accepted = 0";
+
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, name);
+			ResultSet set = st.executeQuery();
+			List<String> friends = new LinkedList<String>();
+			while (set.next()) {
+				  String s = set.getString("name");
+				  friends.add(s);
+			}
+			st.close();
+			return friends;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	public static void acceptFriendRequest(String requester, String accepter){
+		Connection conn = connection();
+		String sql = "UPDATE friendships SET accepted = 1 WHERE requester = ? and accepter = ?";
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, requester);
+			st.setString(2, accepter);
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static List<String> getUserList(Boolean withLocked) throws UndefinedAccount{
+		Connection conn = connection();
+		
+		String sql;
+		if (withLocked)
+			sql = "select name from accounts";
+		else
+			sql = "select name from accounts where locked = 0";
+
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			ResultSet set = st.executeQuery();
+			List<String> names = new LinkedList<String>();
+			while (set.next()) {
+				  String s = set.getString("name");
+				  names.add(s);
+			}
+			st.close();
+			return names;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	
 
 
 }
