@@ -35,5 +35,10 @@
 	<classpathentry kind="lib" path="/Users/andrecorreia/Documents/Faculdade/20162017/1Semestre/SS/Tomcat9/lib/tomcat-util.jar"/>
 	<classpathentry kind="lib" path="/Users/andrecorreia/Documents/Faculdade/20162017/1Semestre/SS/Tomcat9/lib/tomcat-websocket.jar"/>
 	<classpathentry kind="lib" path="/Users/andrecorreia/Documents/Faculdade/20162017/1Semestre/SS/Tomcat9/lib/websocket-api.jar"/>
+	<classpathentry kind="lib" path="/Users/andrecorreia/Desktop/jstl.jar"/>
+	<classpathentry kind="lib" path="/Users/andrecorreia/Documents/Faculdade/20162017/1Semestre/SS/Tomcat9/lib/taglibs-standard-compat-1.2.5.jar"/>
+	<classpathentry kind="lib" path="/Users/andrecorreia/Documents/Faculdade/20162017/1Semestre/SS/Tomcat9/lib/taglibs-standard-impl-1.2.5.jar"/>
+	<classpathentry kind="lib" path="/Users/andrecorreia/Documents/Faculdade/20162017/1Semestre/SS/Tomcat9/lib/taglibs-standard-jstlel-1.2.5.jar"/>
+	<classpathentry kind="lib" path="/Users/andrecorreia/Documents/Faculdade/20162017/1Semestre/SS/Tomcat9/lib/taglibs-standard-spec-1.2.5.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
