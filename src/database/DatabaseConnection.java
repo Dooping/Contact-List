@@ -6,8 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import authenticator.Account;
 import authenticator.IAccount;
@@ -217,7 +219,7 @@ public final class DatabaseConnection {
 		return null;
 	}
 	
-	public static List<String> getFriends(String name) throws UndefinedAccount{
+	public static List<String> getFriends(String name){
 		Connection conn = connection();
 		String sql = "select name from ((SELECT accepter as 'name' FROM friendships WHERE requester = ? and accepted = 1)"
 				+ "union "
@@ -249,7 +251,7 @@ public final class DatabaseConnection {
 		return null;
 	}
 	
-	public static List<String> getFriendRequests(String name) throws UndefinedAccount{
+	public static List<String> getFriendRequests(String name){
 		Connection conn = connection();
 		String sql = "select requester as 'name' from friendships where accepter = ? and accepted = 0";
 
@@ -278,6 +280,31 @@ public final class DatabaseConnection {
 		return null;
 	}
 	
+	public static boolean newFriendRequest(String requester, String accepter){
+		boolean result = false;
+		Connection conn = connection();
+		String sql = "INSERT INTO friendships values (?,?,0);";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, requester);
+			st.setString(2, accepter);
+			st.executeUpdate();
+			result = true;
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
 	public static void acceptFriendRequest(String requester, String accepter){
 		Connection conn = connection();
 		String sql = "UPDATE friendships SET accepted = 1 WHERE requester = ? and accepter = ?";
@@ -298,7 +325,7 @@ public final class DatabaseConnection {
 		}
 	}
 	
-	public static List<String> getUserList(Boolean withLocked) throws UndefinedAccount{
+	public static List<String> getUserList(Boolean withLocked){
 		Connection conn = connection();
 		
 		String sql;
@@ -331,7 +358,96 @@ public final class DatabaseConnection {
 		return null;
 	}
 	
+	public static Map<String,String> getUserResources(String username){
+		Connection conn = connection();
+		
+		String sql = "select name, value from resources where owner = ?";
+
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, username);
+			ResultSet set = st.executeQuery();
+			Map<String,String> resources = new HashMap<String,String>();
+			while (set.next()) {
+				  String name = set.getString("name");
+				  String value = set.getString("value");
+				  resources.put(name,  value);
+			}
+			st.close();
+			return resources;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
 	
+	public static Map<String,String> getUserPermissions(String username){
+		Connection conn = connection();
+		
+		String sql = "select principal, operation from accesscontrol as a "
+				+ "inner join resources as r on a.resource = r.id where principal = ?";
+
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, username);
+			ResultSet set = st.executeQuery();
+			Map<String,String> permissions = new HashMap<String,String>();
+			while (set.next()) {
+				  String resource = set.getString("name");
+				  String operation = set.getString("operation");
+				  permissions.put(resource,  operation);
+			}
+			st.close();
+			return permissions;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	public static boolean setNewPermission(String principal, String owner, String resource, String operation){
+		boolean result = false;
+		Connection conn = connection();
+		String sql = "INSERT INTO accesscontrol('principal','resource','operation') "
+				+ "select ?, id, ? from resources where owner = ? and name = ?";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, principal);
+			st.setString(2, operation);
+			st.setString(3, owner);
+			st.setString(4, resource);
+			st.executeUpdate();
+			result = true;
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 
 
 }
