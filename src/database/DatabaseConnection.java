@@ -325,6 +325,26 @@ public final class DatabaseConnection {
 		}
 	}
 	
+	public static void denyFriendRequest(String requester, String accepter){
+		Connection conn = connection();
+		String sql = "delete from friendships WHERE requester = ? and accepter = ?";
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, requester);
+			st.setString(2, accepter);
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public static List<String> getUserList(Boolean withLocked){
 		Connection conn = connection();
 		
