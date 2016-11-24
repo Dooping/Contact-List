@@ -50,6 +50,10 @@ public class Login extends HttpServlet {
 				break;
 				case LockUser.LOCKUSER: response.sendRedirect("/Authenticator/LockUser");
 				break;
+				case ContactsList.CONTACT_LIST: response.sendRedirect("/Authenticator/ContactsList");
+				break;
+				case FriendsList.FRIEND_LIST: response.sendRedirect("/Authenticator/FriendList");
+				break;
 				}
 			else
 				System.out.println("no origin");

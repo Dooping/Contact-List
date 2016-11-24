@@ -14,27 +14,57 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import authenticator.Account;
+import authenticator.Authenticator;
+import authenticator.IAuthenticator;
+import contact_list.ContactList;
+import exceptions.AuthenticationError;
+import exceptions.WrongConfirmationPasswordException;
 
 
 @WebServlet("/ContactsList")
 public class ContactsList extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
+	public static final String CONTACT_LIST = "contact_list";
 
 	public ContactsList() {
 		super();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		String [] list= {"André", "João","Paulo","David","Alberto"};
-		request.setAttribute("list",list);
-		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/contactslist.jsp");
-		requestDispatcher.forward(request, response);
+		IAuthenticator authenticator = new Authenticator();
+		try {
+			Account acc = authenticator.login(request, response);
+			ContactList contactList = new ContactList();
+			//if superuser contactList.listContacts(true)
+			List<String> list = contactList.listContacts(false);
+			request.setAttribute("list",list);
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/contactslist.jsp");
+			requestDispatcher.forward(request, response);
+		} catch (WrongConfirmationPasswordException e) {
+			RedirectError(request, response, "Password confirmation did not match with the password");
+		} catch (AuthenticationError e) {
+			request.getSession().setAttribute("origin", CONTACT_LIST);
+			response.sendRedirect("/Authenticator/login.html");
+		} catch (Exception e) {
+			RedirectError(request, response, "Exception Error");
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 doGet(request, response);
+	}
+	
+	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
+		request.setAttribute("errorMessage", errorMessage);
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/errormessage.jsp");
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void RedirectSuccess(HttpServletRequest request, HttpServletResponse response, String successMessage) throws ServletException, IOException{
+		request.setAttribute("successMessage", successMessage);
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/successmessage.jsp");
+		requestDispatcher.forward(request, response);
 	}
 
 }
