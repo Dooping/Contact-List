@@ -52,6 +52,12 @@
 		<div>
 			<h3>Personal Info</h3>
 			<p>Name:</p>
+			<p>Age:</p>
+			<p>Sex:</p>
+			<p>Work</p>
+			<p>Birth</p>
+			<p>Lives in:</p>
+			<p>From: </p>
 			<p>Email:</p>
 			<p>Phone Number:</p>
 		</div>
