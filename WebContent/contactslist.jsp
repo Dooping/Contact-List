@@ -19,7 +19,8 @@
   <a href="/Authenticator/" accesskey="1" title="">Home</a>
   
   <h1>Contacts on the system</h1>
-  
+  <form name="form" method="post" action="">
+  <input type="hidden" name="id" />
   <table class="center" cellspacing="0" cellpadding="0">
     <thead>
       <tr>
@@ -28,12 +29,13 @@
     </thead>
     <tbody>
      	<c:forEach items="${list}" var="name">
-        	<tr id="elem" onclick="getTblContents('${name}');" >
+     		<tr id="elem" onclick="{document.form.id.value='${name}';document.form.submit();}" >
             	<td id="username_${name}">${name}</td>
         	</tr>
 	    </c:forEach>
     </tbody>
   </table>
+  </form>
  
  
 </body>

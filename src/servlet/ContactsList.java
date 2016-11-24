@@ -52,7 +52,9 @@ public class ContactsList extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 doGet(request, response);
+		String id =request.getParameter("id");
+		System.out.print("Name: " + id); 
+		doGet(request, response);
 	}
 	
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
