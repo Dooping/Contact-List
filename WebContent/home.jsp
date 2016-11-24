@@ -51,15 +51,15 @@
 		
 		<div>
 			<h3>Personal Info</h3>
-			<p>Name:</p>
-			<p>Age:</p>
-			<p>Sex:</p>
-			<p>Work</p>
-			<p>Birth</p>
-			<p>Lives in:</p>
-			<p>From: </p>
-			<p>Email:</p>
-			<p>Phone Number:</p>
+			<p>Name: ${name}</p>
+			<p>Age: ${age}</p>
+			<p>Sex: ${sex}</p>
+			<p>Work: ${work}</p>
+			<p>Birth: ${birth}</p>
+			<p>Lives in: ${lives}</p>
+			<p>From: ${from}</p>
+			<p>Email: ${email}</p>
+			<p>Phone Number: ${phonenumber}</p>
 		</div>
 		
 </body>
