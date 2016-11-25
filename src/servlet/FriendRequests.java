@@ -34,7 +34,6 @@ public class FriendRequests extends HttpServlet {
 			ContactList contactList = new ContactList();
 			List<String> list = contactList.listFriendRequests(acc.getUsername());
 			int listSize = list.size();
-			System.out.println("Friends Requests Size: " + listSize);
 			request.setAttribute("listSize", listSize);
 			request.setAttribute("list",list);
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/friendrequests.jsp");
