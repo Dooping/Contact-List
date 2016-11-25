@@ -362,7 +362,7 @@ public final class DatabaseConnection {
 	public static boolean denyFriendRequest(String requester, String accepter){
 		boolean result = false;
 		Connection conn = connection();
-		String sql = "delete from friendships WHERE requester = ? and accepter = ?";
+		String sql = "delete from friendships WHERE requester = ? and accepter = ?;";
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, requester);

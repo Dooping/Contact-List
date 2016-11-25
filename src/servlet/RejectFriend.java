@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +19,7 @@ import exceptions.InvalidRequestException;
 import exceptions.UndefinedAccount;
 import exceptions.WrongConfirmationPasswordException;
 
+@WebServlet("/RejectFriend")
 public class RejectFriend extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -34,7 +36,7 @@ public class RejectFriend extends HttpServlet {
 			String requester = (String)request.getAttribute("requesterName");
 			ContactList contactList = new ContactList();
 			contactList.rejectFriend(requester, authUser.getUsername());
-			response.sendRedirect("/Authenticator/FriendsRequests");
+			response.sendRedirect("/Authenticator/FriendRequests");
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", REJECT_FRIEND);
 			response.sendRedirect("/Authenticator/login.html");
@@ -45,12 +47,13 @@ public class RejectFriend extends HttpServlet {
 		} catch (EmptyFieldException e) {
 			RedirectError(request, response, "Invalid Parameters");
 		} catch (InvalidRequestException e) {
+			e.printStackTrace();
 			RedirectError(request, response, "Invalid Request");
 		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 doGet(request, response);
+		doGet(request, response);
 	}
 	
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{

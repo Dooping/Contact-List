@@ -14,7 +14,9 @@ import authenticator.Account;
 import authenticator.Authenticator;
 import authenticator.IAuthenticator;
 import contact_list.ContactList;
+import database.DatabaseConnection;
 import exceptions.AuthenticationError;
+import exceptions.UndefinedAccount;
 import exceptions.WrongConfirmationPasswordException;
 
 
@@ -49,7 +51,31 @@ public class FriendRequests extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 doGet(request, response);
+		String name = request.getParameter("name");
+		String accept_reject = request.getParameter("accept_reject");
+		
+		System.out.println("Name:" + name);
+		System.out.println("accept_reject :" + accept_reject);
+		
+		if(accept_reject.equals("")){
+			try {
+				int id = DatabaseConnection.getAccountId(name);
+				String path = "/Authenticator/user/"+id; 			
+				response.sendRedirect(path);
+			} catch (UndefinedAccount e) {
+				e.printStackTrace();
+			}
+		}else {
+			String path = "";
+			if(accept_reject.equals("accepted"))
+				path = "/AcceptFriend";
+			else 
+				path = "/RejectFriend";
+			request.setAttribute("requesterName", name);
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
+			requestDispatcher.forward(request, response);
+		}
+			
 	}
 	
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{

@@ -20,22 +20,33 @@
    
    <c:if test="${(listSize > 0)}">
  		<form name="form" method="post" action="">
-	  <input type="hidden" name="name" />
-	  <table class="center" cellspacing="0" cellpadding="0">
-	    <thead>
-	      <tr>
-	        <th id="column_name"><span>Name</span></th>
-	      </tr>
-	    </thead>
-	    <tbody>
-     	<c:forEach items="${list}" var="name">
-     		<tr id="elem">
-            	<td id="username_${name}">${name}</td>
-        	</tr>
-	    </c:forEach>
-    </tbody>
-  </table>
-  </form>
+ 		
+			  <input type="hidden" name="name" />
+			  <input type="hidden" name="accept_reject"/>
+			  
+			  <table class="center" cellspacing="0" cellpadding="0">
+			    <thead>
+			      <tr>
+			        <th colspan="1" scope="colgroup" id="column_name"><span>Name</span></th>
+			        <th colspan="2" scope="colgroup" id="column_name"></th>
+			        
+			      </tr>
+			    </thead>
+			    <tbody>
+		     	<c:forEach items="${list}" var="name">
+		     		<tr>
+		            	<td id="elem" onclick="{document.form.name.value='${name}';document.form.submit();}" >${name}</td>
+		            	<td>
+		            		 <input type="submit" value="Accept" onclick="{document.form.accept_reject.value='accepted';document.form.name.value='${name}';document.form.submit();}">
+		            	</td>
+		            	<td>
+		            		 <input type="submit" value="Reject"onclick="{document.form.accept_reject.value='rejected';document.form.name.value='${name}';document.form.submit();}">
+		            	</td>
+		        	</tr>
+			    </c:forEach>
+		    </tbody>
+		  </table>
+	  </form>
    </c:if>
    
 	

@@ -36,7 +36,7 @@ public class AcceptFriend extends HttpServlet {
 			String requester = (String)request.getAttribute("requesterName");
 			ContactList contactList = new ContactList();
 			contactList.acceptFriend(requester, authUser.getUsername());
-			response.sendRedirect("/Authenticator/FriendsRequests");
+			response.sendRedirect("/Authenticator/FriendRequests");
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", ACCEPT_FRIEND);
 			response.sendRedirect("/Authenticator/login.html");

@@ -22,22 +22,24 @@
    
     <c:if test="${listSize > 0}">
  		<form name="form" method="post" action="">
-  <input type="hidden" name="name" />
-  <table class="center" cellspacing="0" cellpadding="0">
-    <thead>
-      <tr>
-        <th id="column_name"><span>Name</span></th>
-      </tr>
-    </thead>
-    <tbody>
-     	<c:forEach items="${list}" var="name">
-     		<tr id="elem" onclick="{document.form.name.value='${name}';document.form.submit();}" >
-            	<td id="username_${name}">${name}</td>
-        	</tr>
-	    </c:forEach>
-    </tbody>
-  </table>
-  </form>
+ 		
+		  <input type="hidden" name="name" />
+		  
+		  <table class="center" cellspacing="0" cellpadding="0">
+		    <thead>
+		      <tr>
+		        <th id="column_name"><span>Name</span></th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		     	<c:forEach items="${list}" var="name">
+		     		<tr id="elem" onclick="{document.form.name.value='${name}';document.form.submit();}" >
+		            	<td id="username_${name}">${name}</td>
+		        	</tr>
+			    </c:forEach>
+		    </tbody>
+		  </table>
+		 </form>
    </c:if>
   
 </body>
