@@ -280,11 +280,65 @@ public final class DatabaseConnection {
 		return null;
 	}
 	
-	public static boolean newFriendRequest(String requester, String accepter){
+	public static boolean checkFriendship(String requester, String accepter){
 		boolean result = false;
 		Connection conn = connection();
-		String sql = "INSERT INTO friendships values (?,?,0);";
-		
+		String sql = "select * from friendships WHERE (requester = ? and accepter = ?)"
+				+ " or (requester = ? and accepter = ?)";
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, requester);
+			st.setString(2, accepter);
+			st.setString(3, accepter);
+			st.setString(4, requester);
+			ResultSet set = st.executeQuery();
+			if(set.first())
+				result = true;
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	public static boolean newFriendRequest(String requester, String accepter){
+		boolean result = false;
+		if(!checkFriendship(requester,accepter)){
+			Connection conn = connection();
+			String sql = "INSERT INTO friendships values (?,?,0);";
+			
+			try {
+				PreparedStatement st = conn.prepareStatement(sql);
+				st.setString(1, requester);
+				st.setString(2, accepter);
+				st.executeUpdate();
+				result = true;
+				st.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (conn != null)
+						conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
+	
+	public static boolean acceptFriendRequest(String requester, String accepter){
+		boolean result = false;
+		Connection conn = connection();
+		String sql = "UPDATE friendships SET accepted = 1 WHERE requester = ? and accepter = ?";
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, requester);
@@ -305,13 +359,14 @@ public final class DatabaseConnection {
 		return result;
 	}
 	
-	public static void acceptFriendRequest(String requester, String accepter){
+	public static void denyFriendRequest(String requester, String accepter){
 		Connection conn = connection();
-		String sql = "UPDATE friendships SET accepted = 1 WHERE requester = ? and accepter = ?";
+		String sql = "delete from friendships WHERE requester = ? and accepter = ?";
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, requester);
 			st.setString(2, accepter);
+			st.executeUpdate();
 			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -325,13 +380,19 @@ public final class DatabaseConnection {
 		}
 	}
 	
-	public static void denyFriendRequest(String requester, String accepter){
+	public static boolean deleteFriend(String user, String friend){
+		boolean result = false;
 		Connection conn = connection();
-		String sql = "delete from friendships WHERE requester = ? and accepter = ?";
+		String sql = "delete from friendships WHERE (requester = ? and accepter = ?)"
+				+ " or (requester = ? and accepter = ?)";
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
-			st.setString(1, requester);
-			st.setString(2, accepter);
+			st.setString(1, user);
+			st.setString(2, friend);
+			st.setString(3, friend);
+			st.setString(4, user);
+			st.executeUpdate();
+			result = true;
 			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -343,6 +404,7 @@ public final class DatabaseConnection {
 				e.printStackTrace();
 			}
 		}
+		return result;
 	}
 	
 	public static List<String> getUserList(Boolean withLocked){
@@ -412,7 +474,7 @@ public final class DatabaseConnection {
 	public static Map<String,String> getUserPermissions(String username){
 		Connection conn = connection();
 		
-		String sql = "select principal, operation from accesscontrol as a "
+		String sql = "select name, operation from accesscontrol as a "
 				+ "inner join resources as r on a.resource = r.id where principal = ?";
 
 

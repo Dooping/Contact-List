@@ -54,6 +54,12 @@ public class Login extends HttpServlet {
 				break;
 				case FriendsList.FRIEND_LIST: response.sendRedirect("/Authenticator/FriendList");
 				break;
+				case AddFriend.ADD_FRIEND: response.sendRedirect("/Authenticator/AddFriend");
+				break;
+				case RemoveFriend.REMOVE_FRIEND: response.sendRedirect("/Authenticator/RemoveFriend");
+				break;
+				case AcceptFriend.ACCEPT_FRIEND: response.sendRedirect("/Authenticator/AcceptFriend");
+				break;
 				}
 			else
 				System.out.println("no origin");
