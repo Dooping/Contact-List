@@ -46,6 +46,10 @@
 			  <input type="submit" value="Contacts List">
 		</form>
 		
+		<form name="friendRequests" action="/Authenticator/FriendsRequests" method="GET">
+			  <input type="submit" value="Friend Requests">
+		</form>
+		
 		<form name="settings" action="/Authenticator/Settings" method="GET">
 			  <input type="submit" value="Settings">
 		</form>
