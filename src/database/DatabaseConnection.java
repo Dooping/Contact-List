@@ -253,7 +253,9 @@ public final class DatabaseConnection {
 	
 	public static List<String> getFriendRequests(String name){
 		Connection conn = connection();
-		String sql = "select requester as 'name' from friendships where accepter = ? and accepted = 0";
+		String sql = "select requester as 'name' from friendships as f"
+				+ " inner join accounts as a on f.name = a.name"
+				+ " where accepter = ? and accepted = 0 and locked = 0";
 
 
 		try {
@@ -430,37 +432,6 @@ public final class DatabaseConnection {
 			}
 			st.close();
 			return names;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
-	
-	public static Map<String,String> getUserResources(String username){
-		Connection conn = connection();
-		
-		String sql = "select name, value from resources where owner = ?";
-
-
-		try {
-			PreparedStatement st = conn.prepareStatement(sql);
-			st.setString(1, username);
-			ResultSet set = st.executeQuery();
-			Map<String,String> resources = new HashMap<String,String>();
-			while (set.next()) {
-				  String name = set.getString("name");
-				  String value = set.getString("value");
-				  resources.put(name,  value);
-			}
-			st.close();
-			return resources;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
