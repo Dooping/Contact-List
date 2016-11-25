@@ -359,7 +359,8 @@ public final class DatabaseConnection {
 		return result;
 	}
 	
-	public static void denyFriendRequest(String requester, String accepter){
+	public static boolean denyFriendRequest(String requester, String accepter){
+		boolean result = false;
 		Connection conn = connection();
 		String sql = "delete from friendships WHERE requester = ? and accepter = ?";
 		try {
@@ -367,6 +368,7 @@ public final class DatabaseConnection {
 			st.setString(1, requester);
 			st.setString(2, accepter);
 			st.executeUpdate();
+			result = true;
 			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -378,6 +380,7 @@ public final class DatabaseConnection {
 				e.printStackTrace();
 			}
 		}
+		return result;
 	}
 	
 	public static boolean deleteFriend(String user, String friend){

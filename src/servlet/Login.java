@@ -58,9 +58,11 @@ public class Login extends HttpServlet {
 				break;
 				case RemoveFriend.REMOVE_FRIEND: response.sendRedirect("/Authenticator/RemoveFriend");
 				break;
+				case FriendRequests.FRIEND_REQUESTS: response.sendRedirect("/Authenticator/FriendRequests");
+				break;
 				case AcceptFriend.ACCEPT_FRIEND: response.sendRedirect("/Authenticator/AcceptFriend");
 				break;
-				case FriendRequests.FRIEND_REQUESTS: response.sendRedirect("/Authenticator/FriendRequests");
+				case RejectFriend.REJECT_FRIEND: response.sendRedirect("/Authenticator/RejectFriend");
 				break;
 				}
 			else

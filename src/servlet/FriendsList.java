@@ -34,11 +34,9 @@ public class FriendsList extends HttpServlet {
 			Account acc = authenticator.login(request, response);
 			ContactList contactList = new ContactList();
 			List<String> friendList = contactList.listFriends(acc.getUsername());
-			List<String> friendRequests = contactList.listFriendRequests(acc.getUsername());
+			//List<String> friendRequests = contactList.listFriendRequests(acc.getUsername());
 			request.setAttribute("friends",friendList);
-			request.setAttribute("requests",friendRequests); 
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/friendslist.jsp");
-			requestDispatcher.forward(request, response);
+			//request.setAttribute("requests",friendRequests); 
 		} catch (WrongConfirmationPasswordException e) {
 			RedirectError(request, response, "Password confirmation did not match with the password");
 		} catch (AuthenticationError e) {
