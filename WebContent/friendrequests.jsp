@@ -6,32 +6,30 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Contact List</title>
+<title>Friends Requests</title>
 <link href="<c:url value="css/main.css" />" rel="stylesheet">
 </head>
 <body>
-	
-  <a href="/Authenticator/" accesskey="1" title="">Home</a>
+	<a href="/Authenticator/" accesskey="1" title="">Home</a>
   
-  <h1>Contacts on the system</h1>
-  
+  <h1>Friend Requests</h1>
   
   <c:if test="${listSize == 0}">
  	<p> You don't have friend Requests </p>
    </c:if>
    
-    <c:if test="${listSize > 0}">
+   <c:if test="${(listSize > 0)}">
  		<form name="form" method="post" action="">
-  <input type="hidden" name="name" />
-  <table class="center" cellspacing="0" cellpadding="0">
-    <thead>
-      <tr>
-        <th id="column_name"><span>Name</span></th>
-      </tr>
-    </thead>
-    <tbody>
+	  <input type="hidden" name="name" />
+	  <table class="center" cellspacing="0" cellpadding="0">
+	    <thead>
+	      <tr>
+	        <th id="column_name"><span>Name</span></th>
+	      </tr>
+	    </thead>
+	    <tbody>
      	<c:forEach items="${list}" var="name">
-     		<tr id="elem" onclick="{document.form.name.value='${name}';document.form.submit();}" >
+     		<tr id="elem">
             	<td id="username_${name}">${name}</td>
         	</tr>
 	    </c:forEach>
@@ -39,6 +37,8 @@
   </table>
   </form>
    </c:if>
-  
+   
+	
+	
 </body>
 </html>

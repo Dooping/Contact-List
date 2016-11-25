@@ -60,6 +60,8 @@ public class Login extends HttpServlet {
 				break;
 				case AcceptFriend.ACCEPT_FRIEND: response.sendRedirect("/Authenticator/AcceptFriend");
 				break;
+				case FriendRequests.FRIEND_REQUESTS: response.sendRedirect("/Authenticator/FriendRequests");
+				break;
 				}
 			else
 				System.out.println("no origin");
