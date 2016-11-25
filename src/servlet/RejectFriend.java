@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,13 +18,12 @@ import exceptions.InvalidRequestException;
 import exceptions.UndefinedAccount;
 import exceptions.WrongConfirmationPasswordException;
 
-@WebServlet("/AcceptFriend")
-public class AcceptFriend extends HttpServlet {
+public class RejectFriend extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static final String ACCEPT_FRIEND = "accept_friend";
+	public static final String REJECT_FRIEND = "reject_friend";
 
-	public AcceptFriend() {
+	public RejectFriend() {
 		super();
 	}
 
@@ -35,10 +33,10 @@ public class AcceptFriend extends HttpServlet {
 			Account authUser = authenticator.login(request,response);
 			String requester = (String)request.getAttribute("requesterName");
 			ContactList contactList = new ContactList();
-			contactList.acceptFriend(requester, authUser.getUsername());
+			contactList.rejectFriend(requester, authUser.getUsername());
 			response.sendRedirect("/Authenticator/FriendsRequests");
 		} catch (AuthenticationError e) {
-			request.getSession().setAttribute("origin", ACCEPT_FRIEND);
+			request.getSession().setAttribute("origin", REJECT_FRIEND);
 			response.sendRedirect("/Authenticator/login.html");
 		} catch (UndefinedAccount e) {
 			RedirectError(request, response, "Undefined Account");
