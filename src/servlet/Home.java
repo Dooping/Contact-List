@@ -30,7 +30,14 @@ public class Home extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		 
+		 String sessionUsername = (String)request.getSession().getAttribute("username");
+		 String welcomeMessage = "";
+		 if(sessionUsername != null && request.getRequestURI().equals("/Authenticator/"))
+			 welcomeMessage = "Hello, " + sessionUsername;
+		 request.setAttribute("welcomeMessage", welcomeMessage);
+		 
+		 
 		 String[] pathInfo = request.getPathInfo().split("/");
 	     String id = "";
 	     

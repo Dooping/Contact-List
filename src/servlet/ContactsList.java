@@ -17,7 +17,9 @@ import authenticator.Account;
 import authenticator.Authenticator;
 import authenticator.IAuthenticator;
 import contact_list.ContactList;
+import database.DatabaseConnection;
 import exceptions.AuthenticationError;
+import exceptions.UndefinedAccount;
 import exceptions.WrongConfirmationPasswordException;
 
 
@@ -52,9 +54,18 @@ public class ContactsList extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id =request.getParameter("id");
-		System.out.print("Name: " + id); 
-		doGet(request, response);
+		String name = request.getParameter("name");
+		String sessionUsername = (String) request.getSession().getAttribute("username");
+		try {
+			String path="/Authenticator";
+			if(!name.equals(sessionUsername)){
+				int id = DatabaseConnection.getAccountId(name);
+				path += "/user/"+id; 
+			}
+			response.sendRedirect(path);
+		} catch (UndefinedAccount e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{

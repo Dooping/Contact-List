@@ -5,8 +5,9 @@
 <title>Home</title>
 </head>
 <body>
-<a href="/Authenticator/" accesskey="1" title="">Home</a>
-	
+		<a href="/Authenticator/" accesskey="1" title="">Home</a>
+		<p>${welcomeMessage}<p> 
+		
 		<h1>Software Security</h1>
 			
 		<form name=“createuser” action="/Authenticator/CreateUser" method="GET">

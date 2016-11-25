@@ -468,6 +468,29 @@ public final class DatabaseConnection {
 		}
 		return result;
 	}
-
-
+	
+	public static int getAccountId(String name) throws UndefinedAccount{
+		Connection conn = connection();
+		String sql = "SELECT * FROM ACCOUNTS WHERE NAME = ?;";
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, name);
+			ResultSet set = st.executeQuery();
+			if(!set.first())
+				throw new UndefinedAccount();
+			int id = set.getInt("id");	
+			st.close();
+			return id;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return -1;
+	}
 }
