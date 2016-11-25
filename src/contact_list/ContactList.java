@@ -55,7 +55,7 @@ public class ContactList {
 	public void rejectFriend(String requester, String accepter) throws EmptyFieldException, InvalidRequestException{
 		if (requester.length() == 0 || requester.length() == 0)
 			throw new EmptyFieldException();
-		if(!DatabaseConnection.denyFriendRequest(requester, accepter));
+		if(!DatabaseConnection.denyFriendRequest(requester, accepter))
 			throw new InvalidRequestException();
 	}
 	
