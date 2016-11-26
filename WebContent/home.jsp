@@ -38,7 +38,7 @@
 			  <input type="submit" value="Remove Friend">
 		</form>
 		
-		<form name="friendlist" action="/Authenticator/FriendList" method="GET">
+		<form name="friendlist" action="/Authenticator/FriendsList" method="GET">
 			  <input type="submit" value="Friends List">
 		</form>
 		

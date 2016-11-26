@@ -52,7 +52,7 @@ public class Login extends HttpServlet {
 				break;
 				case ContactsList.CONTACT_LIST: response.sendRedirect("/Authenticator/ContactsList");
 				break;
-				case FriendsList.FRIEND_LIST: response.sendRedirect("/Authenticator/FriendList");
+				case FriendsList.FRIEND_LIST: response.sendRedirect("/Authenticator/FriendsList");
 				break;
 				case AddFriend.ADD_FRIEND: response.sendRedirect("/Authenticator/AddFriend");
 				break;
