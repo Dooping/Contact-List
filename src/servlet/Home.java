@@ -1,7 +1,14 @@
 package servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.Year;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,16 +16,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import authenticator.Account;
-import authenticator.Authenticator;
-import authenticator.IAuthenticator;
-import exceptions.AuthenticationError;
-import exceptions.EmptyFieldException;
-import exceptions.PasswordNotChangedException;
+import com.mysql.jdbc.TimeUtil;
+
+import contact_list.ContactDetailed;
+import contact_list.ContactList;
 import exceptions.UndefinedAccount;
-import exceptions.WrongConfirmationPasswordException;
 
 
 @WebServlet(urlPatterns = {"", "/user/*"})
@@ -46,16 +49,27 @@ public class Home extends HttpServlet {
 	     }
 		
 	     // Check permissions ... 
-	     
-		request.setAttribute("name","Andre");
-		request.setAttribute("age","20");
-		request.setAttribute("sex","Andre");
-		request.setAttribute("work","Andre");
-		request.setAttribute("birth","Andre");
-		request.setAttribute("lives","Andre");
-		request.setAttribute("from","Andre");
-		request.setAttribute("email","Andre");
-		request.setAttribute("phonenumber","Andre");
+	    
+	    if(sessionUsername!= null){
+		    ContactList clist = new ContactList();
+		    ContactDetailed cd;
+			try {
+				cd = clist.getContactDetails(sessionUsername);
+				request.setAttribute("name",sessionUsername);
+				request.setAttribute("age",clist.getAge(cd.getBirthdate().getTime()));
+				request.setAttribute("sex",cd.getSex());
+				request.setAttribute("work",cd.getWork());
+				request.setAttribute("birth",cd.getBirthdate());
+				request.setAttribute("lives",cd.getLocation());
+				request.setAttribute("from",cd.getOrigin());
+				request.setAttribute("email",cd.getEmail());
+				request.setAttribute("phonenumber",cd.getPhone());
+			} catch (UndefinedAccount e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+		
 		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/home.jsp");
 		requestDispatcher.forward(request, response);
 	}

@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -11,20 +13,19 @@
 	<h1>Settings</h1>
 	
 	<form name="settingsform" action="/Authenticator/Settings" method="POST">
-			Name:<input type=“text" size=20” name="name" autofocus><br>
-  			Age:<input type="text" size=20 name="age"><br>
   			Sex:<select>
   					  <option value="-">-</option>
-					  <option value="female">Female</option>
-					  <option value="male">Male</option>
+					  <option value="female" ${selectedSex == "F" ? 'selected="selected"' : ''}>Female</option>
+					  <option value="male" ${selectedSex == "M" ? 'selected="selected"' : ''}>Male</option>
 				 </select> <br>
-  			Work:<input type="text" size=20 name="work"><br>
-  			Birth:<input type="text" size=20 name="birth"><br>
-  			Lives in:<input type="text" size=20 name="livesin"><br>
-  			From:<input type="text" size=20 name="from"><br>
-  			Email<input type="text" size=20 name="email"><br>
-  			Phone Number:<input type="number" size=20 name="phonenumber"><br>
+  			Work:<input type="text" size=20 name="work" value="${contactDetails.work}"><br>
+  			Birth:<input type="text" size=20 name="birth" value="${contactDetails.birthdate}"><br>
+  			Lives in:<input type="text" size=20 name="livesin" value="${contactDetails.location}"><br>
+  			From:<input type="text" size=20 name="from" value="${contactDetails.origin}"><br>
+  			Email<input type="text" size=20 name="email" value="${contactDetails.email}"><br>
+  			Phone Number:<input type="number" size=20 name="phonenumber" value="${contactDetails.phone}"><br>
   			<input type="submit" value="Save"/>
+  		
 	</form>
 	
 </body>

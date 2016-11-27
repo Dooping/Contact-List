@@ -1,5 +1,7 @@
 package contact_list;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import database.DatabaseConnection;
@@ -57,6 +59,17 @@ public class ContactList {
 			throw new EmptyFieldException();
 		if(!DatabaseConnection.denyFriendRequest(requester, accepter))
 			throw new InvalidRequestException();
+	}
+	
+	public ContactDetailed getContactDetails(String name) throws UndefinedAccount{
+		return DatabaseConnection.getUserDetails(name);
+	}
+	
+	public int getAge(long birthDateMillis){
+		//cd.getBirthdate().getTime()
+		GregorianCalendar c = new GregorianCalendar();
+		c.setTimeInMillis(System.currentTimeMillis() - birthDateMillis);
+		return c.get(Calendar.YEAR) - 1970;
 	}
 	
 }
