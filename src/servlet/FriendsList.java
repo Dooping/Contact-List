@@ -14,11 +14,13 @@ import authenticator.Account;
 import authenticator.Authenticator;
 import authenticator.IAuthenticator;
 import contact_list.ContactList;
+import database.DatabaseConnection;
 import exceptions.AuthenticationError;
+import exceptions.UndefinedAccount;
 import exceptions.WrongConfirmationPasswordException;
 
 
-@WebServlet("/FriendList")
+@WebServlet("/FriendsList")
 public class FriendsList extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -34,9 +36,11 @@ public class FriendsList extends HttpServlet {
 			Account acc = authenticator.login(request, response);
 			ContactList contactList = new ContactList();
 			List<String> friendList = contactList.listFriends(acc.getUsername());
-			//List<String> friendRequests = contactList.listFriendRequests(acc.getUsername());
+			int listSize = friendList.size();
+			request.setAttribute("listSize", listSize);
 			request.setAttribute("friends",friendList);
-			//request.setAttribute("requests",friendRequests); 
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/friendslist.jsp");
+			requestDispatcher.forward(request, response);
 		} catch (WrongConfirmationPasswordException e) {
 			RedirectError(request, response, "Password confirmation did not match with the password");
 		} catch (AuthenticationError e) {
@@ -48,7 +52,18 @@ public class FriendsList extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 doGet(request, response);
+		String name = request.getParameter("name");
+		String sessionUsername = (String) request.getSession().getAttribute("username");
+		try {
+			String path="/Authenticator";
+			if(!name.equals(sessionUsername)){
+				int id = DatabaseConnection.getAccountId(name);
+				path += "/user/"+id; 
+			}
+			response.sendRedirect(path);
+		} catch (UndefinedAccount e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{

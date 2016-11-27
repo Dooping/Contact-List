@@ -254,7 +254,7 @@ public final class DatabaseConnection {
 	public static List<String> getFriendRequests(String name){
 		Connection conn = connection();
 		String sql = "select requester as 'name' from friendships as f"
-				+ " inner join accounts as a on f.name = a.name"
+				+ " inner join accounts as a on f.requester = a.name"
 				+ " where accepter = ? and accepted = 0 and locked = 0";
 
 
