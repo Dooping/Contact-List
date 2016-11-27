@@ -15,7 +15,7 @@ import authenticator.Account;
 import authenticator.IAccount;
 import contact_list.ContactDetailed;
 import exceptions.AuthenticationError;
-
+import exceptions.PermissionNotExistsException;
 import exceptions.UndefinedAccount;
 
 
@@ -205,8 +205,8 @@ public final class DatabaseConnection {
 			String accPwd = set.getString("pwdhash");
 			Boolean accLocked = set.getBoolean("locked");
 			Boolean accLogged = set.getBoolean("logged_in");
-			String keyhash = set.getString("keyhash");
-			Account acc = new Account(accName, accPwd, accLogged, accLocked, keyhash);
+			int nonce = set.getInt("nonce");
+			Account acc = new Account(accName, accPwd, accLogged, accLocked, nonce);
 			st.close();
 			return acc;
 		} catch (SQLException e) {
@@ -506,6 +506,33 @@ public final class DatabaseConnection {
 			}
 		}
 		return result;
+	}
+	
+	public static void checkPermission(String principal, String resource, String operation) throws PermissionNotExistsException{
+		Connection conn = connection();
+		String sql = "select * from accesscontrol as a "
+				+ "inner join resources as r on a.resource = r.id where principal = ? and r.name = ? a.operation = ?";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, principal);
+			st.setString(2, resource);
+			st.setString(3, operation);
+			st.executeUpdate();
+			ResultSet set = st.executeQuery();
+			if(!set.first())
+				throw new PermissionNotExistsException();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public static int getAccountId(String name) throws UndefinedAccount{

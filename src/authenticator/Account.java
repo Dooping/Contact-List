@@ -6,14 +6,14 @@ public class Account implements IAccount {
 	private String password;
 	private boolean logged_in;
 	private boolean locked;
-	private String keyhash;
+	private int nonce;
 	
-	public Account(String username, String password, boolean logged_in, boolean locked, String keyhash){
+	public Account(String username, String password, boolean logged_in, boolean locked, int nonce){
 		this.username = username;
 		this.password = password;
 		this.logged_in = logged_in;
 		this.locked = locked;
-		this.keyhash = keyhash;
+		this.nonce = nonce;
 	}
 	public String getUsername() {
 		return username;
@@ -31,8 +31,8 @@ public class Account implements IAccount {
 		return locked;
 	}
 	
-	public String getKeyhash() {
-		return keyhash;
+	public int getNonce() {
+		return nonce;
 	}
 
 }

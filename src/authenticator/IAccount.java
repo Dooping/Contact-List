@@ -6,5 +6,5 @@ public interface IAccount {
 	String getPassword();
 	boolean isLoggedIn();
 	boolean isLocked();
-	String getKeyhash();
+	int getNonce();
 }
