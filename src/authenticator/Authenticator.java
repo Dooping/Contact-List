@@ -106,6 +106,7 @@ public class Authenticator implements IAuthenticator{
 			if(!AESencrp.encrypt(pwd).equals(acc.getPassword()))
 				throw new WrongConfirmationPasswordException();
 			DatabaseConnection.login(acc);
+	        //System.out.println(AESencrp.encrypt(java.util.Base64.getEncoder().encodeToString(AESencrp.generateUserKey().getEncoded())));
 			return acc;
 		} catch(AuthenticationError e){
 			throw new AuthenticationError();
