@@ -11,8 +11,15 @@ public final class AESencrp {
   private static final byte[] keyValue = 
   new byte[] { 'T', 'h', 'e', 'B', 'e', 's', '7', 'S', '$', 'c', 'r','e', 't', 'K', 'e', 'y' };
 
-public static String encrypt(String Data) throws Exception {
+  	public static String encrypt(String Data) throws Exception {
         Key key = generateKey();
+        Cipher c = Cipher.getInstance(ALGO);
+        c.init(Cipher.ENCRYPT_MODE, key);
+        byte[] encVal = c.doFinal(Data.getBytes());
+        return java.util.Base64.getEncoder().encodeToString(encVal);
+    }
+  	
+  	public static String encrypt(String Data, SecretKey key) throws Exception {
         Cipher c = Cipher.getInstance(ALGO);
         c.init(Cipher.ENCRYPT_MODE, key);
         byte[] encVal = c.doFinal(Data.getBytes());
@@ -27,11 +34,23 @@ public static String encrypt(String Data) throws Exception {
         byte[] decValue = c.doFinal(decordedValue);
         return new String(decValue);
     }
+    
+    public static String decrypt(String encryptedData, SecretKey key) throws Exception {
+        Cipher c = Cipher.getInstance(ALGO);
+        c.init(Cipher.DECRYPT_MODE, key);
+        byte[] decordedValue = java.util.Base64.getDecoder().decode(encryptedData);
+        byte[] decValue = c.doFinal(decordedValue);
+        return new String(decValue);
+    }
 
     private static Key generateKey() throws Exception {
         Key key = new SecretKeySpec(keyValue, ALGO);
         return key;
-}
+    }
+    
+    public static SecretKey generateUserKey() throws Exception{
+    	return KeyGenerator.getInstance(ALGO).generateKey();
+    }
 
     /*public static void main(String[] args) throws Exception {
 
