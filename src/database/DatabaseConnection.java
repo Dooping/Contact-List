@@ -575,10 +575,10 @@ public final class DatabaseConnection {
 			String location = set.getString("location");
 			String origin = set.getString("origin");
 			String email = set.getString("email");
-			String phoneNumber = set.getString("phoneNumber");
-			String internal_statment = set.getString("internal_statment");
+			String phone = set.getString("phone");
+			String internal_statement = set.getString("internal_statement");
 			String external_statement = set.getString("external_statement");
-			ContactDetailed contactdetailed = new ContactDetailed(name, sex, work, birthdate, location, origin, email, phoneNumber, internal_statment, external_statement);
+			ContactDetailed contactdetailed = new ContactDetailed(name, sex, work, birthdate, location, origin, email, phone, internal_statement, external_statement);
 			st.close();
 			return contactdetailed;
 		} catch (SQLException e) {
@@ -606,8 +606,8 @@ public final class DatabaseConnection {
 			st.setString(4, cd.getLocation());
 			st.setString(5, cd.getOrigin());
 			st.setString(6, cd.getEmail());
-			st.setString(7, cd.getPhoneNumber());
-			st.setString(8, cd.getInternal_statment());
+			st.setString(7, cd.getPhone());
+			st.setString(8, cd.getInternal_statement());
 			st.setString(9, cd.getExternal_statement());
 			st.executeUpdate();
 			result = true;

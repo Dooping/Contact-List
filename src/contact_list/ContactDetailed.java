@@ -10,11 +10,11 @@ public class ContactDetailed {
 	private String location;
 	private String origin;
 	private String email;
-	private String phoneNumber;
-	private String internal_statment;
+	private String phone;
+	private String internal_statement;
 	private String external_statement;
 	
-	public ContactDetailed(String name, char sex, String work, Date birthdate, String location, String origin, String email, String phoneNumber, String internal_statment, String external_statement){
+	public ContactDetailed(String name, char sex, String work, Date birthdate, String location, String origin, String email, String phone, String internal_statement, String external_statement){
 		this.name = name;
 		this.sex = sex;
 		this.work = work;
@@ -22,8 +22,8 @@ public class ContactDetailed {
 		this.location = location;
 		this.origin = origin;
 		this.email = email;
-		this.phoneNumber = phoneNumber;
-		this.internal_statment = internal_statment;
+		this.phone = phone;
+		this.internal_statement = internal_statement;
 		this.external_statement = external_statement;
 	}
 
@@ -83,20 +83,20 @@ public class ContactDetailed {
 		this.email = email;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
-	public String getInternal_statment() {
-		return internal_statment;
+	public String getInternal_statement() {
+		return internal_statement;
 	}
 
-	public void setInternal_statment(String internal_statment) {
-		this.internal_statment = internal_statment;
+	public void setInternal_statement(String internal_statement) {
+		this.internal_statement = internal_statement;
 	}
 
 	public String getExternal_statement() {
