@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 import authenticator.Account;
 import authenticator.IAccount;
+import contact_list.ContactDetailed;
 import exceptions.AuthenticationError;
 
 import exceptions.UndefinedAccount;
@@ -528,5 +530,70 @@ public final class DatabaseConnection {
 			}
 		}
 		return -1;
+	}
+	
+	public static ContactDetailed getUserDetails(String name) throws UndefinedAccount{
+		Connection conn = DatabaseConnection.connection();
+		String sql = "SELECT * FROM DETAILS WHERE NAME = ?";
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, name);
+			ResultSet set = st.executeQuery();
+			if(!set.first())
+				throw new UndefinedAccount();
+			char sex = set.getString("sex").charAt(0);
+			String work = set.getString("work");
+			Date birthdate = set.getDate("birthdate");
+			String location = set.getString("location");
+			String origin = set.getString("origin");
+			String email = set.getString("email");
+			String phoneNumber = set.getString("phoneNumber");
+			String internal_statment = set.getString("internal_statment");
+			String external_statement = set.getString("external_statement");
+			ContactDetailed contactdetailed = new ContactDetailed(name, sex, work, birthdate, location, origin, email, phoneNumber, internal_statment, external_statement);
+			st.close();
+			return contactdetailed;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	public static boolean setUserDetails(ContactDetailed cd){
+		boolean result = false;
+		Connection conn = DatabaseConnection.connection();
+		String sql = "INSERT INTO DETAILS VALUES (?,?,?,?,?,?,?,?,?);";
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, cd.getName());
+			st.setString(2, String.valueOf(cd.getSex()));
+			st.setDate(3, cd.getBirthdate());
+			st.setString(4, cd.getLocation());
+			st.setString(5, cd.getOrigin());
+			st.setString(6, cd.getEmail());
+			st.setString(7, cd.getPhoneNumber());
+			st.setString(8, cd.getInternal_statment());
+			st.setString(9, cd.getExternal_statement());
+			st.executeUpdate();
+			result = true;
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
 	}
 }
