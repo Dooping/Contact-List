@@ -33,8 +33,9 @@ public class Authenticator implements IAuthenticator{
 				throw new WrongConfirmationPasswordException();
 			
 			pwd1 = AESencrp.encrypt(pwd1);
+			String key = AESencrp.encrypt(java.util.Base64.getEncoder().encodeToString(AESencrp.generateUserKey().getEncoded()));
 						
-			if(!DatabaseConnection.createUser(name, pwd1))
+			if(!DatabaseConnection.createUser(name, pwd1, key))
 				throw new UserNotCreatedException();
 		}	
 		

@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -51,15 +50,16 @@ public final class DatabaseConnection {
 		return null;
 	}
 
-	public static boolean createUser(String username, String password){
+	public static boolean createUser(String username, String password, String keyhash){
 		boolean result = false;
 		Connection conn = connection();
-		String sql = "INSERT INTO " + TABLE_NAME +" values (?,?,0,0);";
+		String sql = "INSERT INTO accounts (name, pwdhash, logged_in, locked, keyhash) values (?,?,0,0,?);";
 		
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, username);
 			st.setString(2, password);
+			st.setString(3, keyhash);
 			st.executeUpdate();
 			result = true;
 			st.close();
@@ -205,7 +205,8 @@ public final class DatabaseConnection {
 			String accPwd = set.getString("pwdhash");
 			Boolean accLocked = set.getBoolean("locked");
 			Boolean accLogged = set.getBoolean("logged_in");
-			Account acc = new Account(accName, accPwd, accLogged, accLocked);
+			String keyhash = set.getString("keyhash");
+			Account acc = new Account(accName, accPwd, accLogged, accLocked, keyhash);
 			st.close();
 			return acc;
 		} catch (SQLException e) {

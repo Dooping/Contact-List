@@ -19,7 +19,8 @@ public final class AESencrp {
         return java.util.Base64.getEncoder().encodeToString(encVal);
     }
   	
-  	public static String encrypt(String Data, SecretKey key) throws Exception {
+  	public static String encrypt(String Data, String keyStr) throws Exception {
+  		Key key = new SecretKeySpec(keyStr.getBytes(), ALGO);
         Cipher c = Cipher.getInstance(ALGO);
         c.init(Cipher.ENCRYPT_MODE, key);
         byte[] encVal = c.doFinal(Data.getBytes());
