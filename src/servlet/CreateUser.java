@@ -88,8 +88,6 @@ public class CreateUser extends HttpServlet {
 				HttpSession session = request.getSession(true);
 				session.setAttribute("capabilities", capabilities);
 				authenticator.create_account(aname, apwd1, apwd2);
-				ContactList cl = new ContactList();
-				cl.createUserDetails(aname);
 				RedirectSuccess(request, response, "User Created Successfully!");
 			} catch (PermissionNotExistsException e) {
 				RedirectError(request, response, "Username " + acc.getUsername() + " can't create users!");

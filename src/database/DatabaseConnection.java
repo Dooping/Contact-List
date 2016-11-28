@@ -50,16 +50,16 @@ public final class DatabaseConnection {
 		return null;
 	}
 
-	public static boolean createUser(String username, String password, String keyhash){
+	public static boolean createUser(String username, String password, int nonce){
 		boolean result = false;
 		Connection conn = connection();
-		String sql = "INSERT INTO accounts (name, pwdhash, logged_in, locked, keyhash) values (?,?,0,0,?);";
+		String sql = "INSERT INTO accounts (name, pwdhash, logged_in, locked, nonce) values (?,?,0,0,?);";
 		
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, username);
 			st.setString(2, password);
-			st.setString(3, keyhash);
+			st.setInt(3, nonce);
 			st.executeUpdate();
 			result = true;
 			st.close();
@@ -621,11 +621,35 @@ public final class DatabaseConnection {
 	
 	public static void createUserDetails(String name){
 		Connection conn = connection();
-		String sql = "INSERT INTO DETAILS('NAME') VALUES (?)";
+		String sql = "INSERT INTO details(name,sex) VALUES (?,'-')";
 		
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, name);
+			st.executeUpdate();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void createUserResources(String name){
+		Connection conn = connection();
+		String sql = "INSERT INTO resources(owner, name, permission) VALUES (?,'profile','internal'),(?,'contacts','internal'),(?,'friends', 'private'),(?,'internal','internal')";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, name);
+			st.setString(2, name);
+			st.setString(3, name);
+			st.setString(4, name);
 			st.executeUpdate();
 			st.close();
 		} catch (SQLException e) {
