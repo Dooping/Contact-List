@@ -17,6 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.mysql.jdbc.TimeUtil;
 
@@ -52,20 +53,20 @@ public class Home extends HttpServlet {
 
 			String[] pathInfo = request.getPathInfo().split("/");
 			String id = "";
-
+			String user="";
+			
 			if(pathInfo.length != 0){
 				id = pathInfo[1];
-				//String pageUsername = (String) request.getAttribute("pageUsername");
-				
-			}
-
-			// Check permissions ... 
+				HttpSession session = request.getSession(true);
+				user = (String)session.getAttribute("pageUsername");
+			} else 
+				user = acc.getUsername();
 
 			ContactList clist = new ContactList();
 			ContactDetailed cd;
 			try {
-				cd = clist.getContactDetails(acc.getUsername());
-				request.setAttribute("name",acc.getUsername());
+				cd = clist.getContactDetails(user);
+				request.setAttribute("name",user);
 				request.setAttribute("age",clist.getAge(cd.getBirthdate().getTime()));
 				request.setAttribute("sex",cd.getSex());
 				request.setAttribute("work",cd.getWork());
