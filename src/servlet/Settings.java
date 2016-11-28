@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,6 +24,7 @@ import contact_list.ContactList;
 import exceptions.AuthenticationError;
 import exceptions.WrongConfirmationPasswordException;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 
 
@@ -59,32 +63,47 @@ public class Settings extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String name = (String) request.getSession().getAttribute("username");
-		char sex = 'M';
+		
+		String selectedItem="";
+		if(request.getParameter("sexSelectedOption")!=null)
+		{
+		   selectedItem= request.getParameter("sexSelectedOption");
+		}
+		
+		char sex;
+		switch(selectedItem){
+		case "male":
+			sex = 'M';
+			break;
+		case "female":
+			sex = 'F';
+			break;
+		default:
+			sex ='-';
+			break;
+		}
+		
+		
 		String work = request.getParameter("work");
 		
-		Date birthdate = new Date(System.currentTimeMillis());
+		Calendar mydate = new GregorianCalendar();
+		String birth = request.getParameter("birth");
+		java.util.Date birthDate = new java.util.Date();
+		try {
+			birthDate = new SimpleDateFormat("yyyy-MM-d", Locale.ENGLISH).parse(birth);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		mydate.setTime(birthDate);
+	    java.sql.Date sqlBirthdate = new java.sql.Date(birthDate.getTime());  
 		
-		/*SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        String dateInString = request.getParameter("birth");
-        Date birthdate = null;
-        
-        try {
-
-            birthdate = (Date) formatter.parse(dateInString);
-            System.out.println(birthdate);
-            System.out.println(formatter.format(birthdate));
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } */
 		String location = request.getParameter("livesin");
 		String origin = request.getParameter("from");
 		String email = request.getParameter("email");
 		String phone = request.getParameter("phonenumber");
 		
-		ContactDetailed cd = new ContactDetailed(name, sex, work, birthdate, location, origin, email, phone, "", "");
-		
-		
+		ContactDetailed cd = new ContactDetailed(name, sex, work, sqlBirthdate, location, origin, email, phone, "", "");
+	
 		ContactList contactList = new ContactList();
 		contactList.setContactDetails(cd);
 		response.sendRedirect("/Authenticator");

@@ -10,7 +10,7 @@
 		
 		<h1>Software Security</h1>
 			
-		<form name=â€œcreateuserâ€ action="/Authenticator/CreateUser" method="GET">
+		<form name="createuser"€ action="/Authenticator/CreateUser" method="GET">
 			  <input type="submit" value="Create User">
 		</form>
 		
@@ -23,10 +23,10 @@
 		</form>
 		
 		<form name="lockuser" action="/Authenticator/LockUser" method="GET">
-			<input type="submit" value="Lock User">
+			<input type="submit" value="Lock/Unlock User">
 		</form>
 		
-		<form name=â€œlogoutâ€ action="/Authenticator/Logout" method="GET">
+		<form name="logout"€ action="/Authenticator/Logout" method="GET">
 			  <input type="submit" value="Logout">
 		</form>
 		
