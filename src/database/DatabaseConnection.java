@@ -617,4 +617,26 @@ public final class DatabaseConnection {
 		}
 		return result;
 	}
+	
+	
+	public static void createUserDetails(String name){
+		Connection conn = connection();
+		String sql = "INSERT INTO DETAILS('NAME') VALUES (?)";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, name);
+			st.executeUpdate();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

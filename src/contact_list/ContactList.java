@@ -75,4 +75,8 @@ public class ContactList {
 		DatabaseConnection.setUserDetails(cd);
 	}
 	
+	public void createUserDetails(String name){
+		DatabaseConnection.createUserDetails(name);
+	}
+	
 }
