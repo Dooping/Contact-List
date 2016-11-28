@@ -1,36 +1,41 @@
 package accesscontrol;
 
-import java.security.*;
-
 import org.json.simple.JSONObject;
 
 import authenticator.AESencrp;
 
 public class Capability {
 	
-	private String owner,grantee,operation;
-	private int resource,nonce;
+	private String owner,grantee,operation, signature, resource;
 	private long time;
 	
-	public Capability(String owner, String grantee, int nonce, int resource, String operation,long time ){
+	public Capability(String owner, String grantee, String resource, String operation,long time ){
 		this.owner = owner;
 		this.grantee = grantee;
-		this.nonce = nonce;
 		this.resource = resource;
 		this.operation = operation;
 		this.time = time;
 	}
 	
+	public Capability(JSONObject token){
+		JSONObject payload = (JSONObject)token.get("payload");
+		this.owner = (String)payload.get("owner");
+		this.grantee = (String)payload.get("grantee");
+		this.resource = (String)payload.get("resource");
+		this.operation = (String)payload.get("operation");
+		this.time = (Long)payload.get("time");
+		this.signature = (String)token.get("token");
+	}
+	
 	@SuppressWarnings("unchecked")
-	public String build() throws Exception{
+	public String buildToken(int nonce) throws Exception{
 		JSONObject payload = new JSONObject();
 		payload.put("owner", owner);
 		payload.put("grantee", grantee);
-		payload.put("nonce", new Integer(nonce));
 		payload.put("resource", new Integer(resource));
 		payload.put("operation", operation);
 		payload.put("time", new Long(time));
-		String encrPayload = AESencrp.encrypt(payload.toJSONString());
+		String encrPayload = AESencrp.hash(payload.toJSONString(), nonce);
 		JSONObject result = new JSONObject();
 		result.put("payload", payload);
 		result.put("token", encrPayload);
@@ -57,14 +62,6 @@ public class Capability {
 		this.grantee = grantee;
 	}
 
-	public int getNonce() {
-		return nonce;
-	}
-
-	public void setNonce(int nonce) {
-		this.nonce = nonce;
-	}
-
 	public String getOperation() {
 		return operation;
 	}
@@ -73,11 +70,11 @@ public class Capability {
 		this.operation = operation;
 	}
 
-	public int getResource() {
+	public String getResource() {
 		return resource;
 	}
 
-	public void setResource(int resource) {
+	public void setResource(String resource) {
 		this.resource = resource;
 	}
 
@@ -87,6 +84,21 @@ public class Capability {
 
 	public void setTime(long time) {
 		this.time = time;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String toString(){
+		JSONObject payload = new JSONObject();
+		payload.put("owner", owner);
+		payload.put("grantee", grantee);
+		payload.put("resource", new Integer(resource));
+		payload.put("operation", operation);
+		payload.put("time", new Long(time));
+		return payload.toJSONString();
+	}
+
+	public String getSignature() {
+		return signature;
 	}
 	
 	

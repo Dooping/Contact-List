@@ -6,4 +6,5 @@ public interface IAccount {
 	String getPassword();
 	boolean isLoggedIn();
 	boolean isLocked();
+	int getNonce();
 }

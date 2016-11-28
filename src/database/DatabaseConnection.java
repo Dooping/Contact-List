@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,7 +15,7 @@ import authenticator.Account;
 import authenticator.IAccount;
 import contact_list.ContactDetailed;
 import exceptions.AuthenticationError;
-
+import exceptions.PermissionNotExistsException;
 import exceptions.UndefinedAccount;
 
 
@@ -51,15 +50,16 @@ public final class DatabaseConnection {
 		return null;
 	}
 
-	public static boolean createUser(String username, String password){
+	public static boolean createUser(String username, String password, String keyhash){
 		boolean result = false;
 		Connection conn = connection();
-		String sql = "INSERT INTO " + TABLE_NAME +" values (?,?,0,0);";
+		String sql = "INSERT INTO accounts (name, pwdhash, logged_in, locked, keyhash) values (?,?,0,0,?);";
 		
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, username);
 			st.setString(2, password);
+			st.setString(3, keyhash);
 			st.executeUpdate();
 			result = true;
 			st.close();
@@ -205,7 +205,8 @@ public final class DatabaseConnection {
 			String accPwd = set.getString("pwdhash");
 			Boolean accLocked = set.getBoolean("locked");
 			Boolean accLogged = set.getBoolean("logged_in");
-			Account acc = new Account(accName, accPwd, accLogged, accLocked);
+			int nonce = set.getInt("nonce");
+			Account acc = new Account(accName, accPwd, accLogged, accLocked, nonce);
 			st.close();
 			return acc;
 		} catch (SQLException e) {
@@ -447,38 +448,6 @@ public final class DatabaseConnection {
 		return null;
 	}
 	
-	public static Map<String,String> getUserPermissions(String username){
-		Connection conn = connection();
-		
-		String sql = "select name, operation from accesscontrol as a "
-				+ "inner join resources as r on a.resource = r.id where principal = ?";
-
-
-		try {
-			PreparedStatement st = conn.prepareStatement(sql);
-			st.setString(1, username);
-			ResultSet set = st.executeQuery();
-			Map<String,String> permissions = new HashMap<String,String>();
-			while (set.next()) {
-				  String resource = set.getString("name");
-				  String operation = set.getString("operation");
-				  permissions.put(resource,  operation);
-			}
-			st.close();
-			return permissions;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
-	
 	public static boolean setNewPermission(String principal, String owner, String resource, String operation){
 		boolean result = false;
 		Connection conn = connection();
@@ -505,6 +474,33 @@ public final class DatabaseConnection {
 			}
 		}
 		return result;
+	}
+	
+	public static void checkPermission(String principal, String resource, String operation) throws PermissionNotExistsException{
+		Connection conn = connection();
+		String sql = "select * from accesscontrol as a "
+				+ "inner join resources as r on a.resource = r.id where principal = ? and r.name = ? a.operation = ?";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, principal);
+			st.setString(2, resource);
+			st.setString(3, operation);
+			st.executeUpdate();
+			ResultSet set = st.executeQuery();
+			if(!set.first())
+				throw new PermissionNotExistsException();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public static int getAccountId(String name) throws UndefinedAccount{
