@@ -2,6 +2,8 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -18,6 +20,8 @@ import contact_list.ContactDetailed;
 import contact_list.ContactList;
 import exceptions.AuthenticationError;
 import exceptions.WrongConfirmationPasswordException;
+
+import java.text.ParseException;
 
 
 @WebServlet("/Settings")
@@ -39,7 +43,7 @@ public class Settings extends HttpServlet {
 			ContactList contactList = new ContactList();
 			ContactDetailed contactDetails = contactList.getContactDetails(acc.getUsername());
 			request.setAttribute("contactDetails",contactDetails);
-			request.setAttribute("selectedSexNone", contactDetails.getSex());
+			request.setAttribute("selectedSex", contactDetails.getSex());
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/settings.jsp");
 			requestDispatcher.forward(request, response);
 		} catch (WrongConfirmationPasswordException e) {
@@ -53,7 +57,37 @@ public class Settings extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 doGet(request, response);
+		
+		String name = (String) request.getSession().getAttribute("username");
+		char sex = 'M';
+		String work = request.getParameter("work");
+		
+		Date birthdate = new Date(System.currentTimeMillis());
+		
+		/*SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        String dateInString = request.getParameter("birth");
+        Date birthdate = null;
+        
+        try {
+
+            birthdate = (Date) formatter.parse(dateInString);
+            System.out.println(birthdate);
+            System.out.println(formatter.format(birthdate));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } */
+		String location = request.getParameter("livesin");
+		String origin = request.getParameter("from");
+		String email = request.getParameter("email");
+		String phone = request.getParameter("phonenumber");
+		
+		ContactDetailed cd = new ContactDetailed(name, sex, work, birthdate, location, origin, email, phone, "", "");
+		
+		
+		ContactList contactList = new ContactList();
+		contactList.setContactDetails(cd);
+		response.sendRedirect("/Authenticator");
 	}
 	
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
