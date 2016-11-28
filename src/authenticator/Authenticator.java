@@ -40,6 +40,8 @@ public class Authenticator implements IAuthenticator{
 						
 			if(!DatabaseConnection.createUser(name, pwd1, rn.nextInt()))
 				throw new UserNotCreatedException();
+			DatabaseConnection.createUserDetails(name);
+			DatabaseConnection.createUserResources(name);
 		}	
 		
 	}

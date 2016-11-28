@@ -639,4 +639,28 @@ public final class DatabaseConnection {
 			}
 		}
 	}
+	
+	public static void createUserResources(String name){
+		Connection conn = connection();
+		String sql = "INSERT INTO resources(owner, name) VALUES (?,'profile'),(?,'contacts'),(?,'friends'),(?,'internal')";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, name);
+			st.setString(2, name);
+			st.setString(3, name);
+			st.setString(4, name);
+			st.executeUpdate();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
