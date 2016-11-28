@@ -50,16 +50,16 @@ public final class DatabaseConnection {
 		return null;
 	}
 
-	public static boolean createUser(String username, String password, String keyhash){
+	public static boolean createUser(String username, String password, int nonce){
 		boolean result = false;
 		Connection conn = connection();
-		String sql = "INSERT INTO accounts (name, pwdhash, logged_in, locked, keyhash) values (?,?,0,0,?);";
+		String sql = "INSERT INTO accounts (name, pwdhash, logged_in, locked, nonce) values (?,?,0,0,?);";
 		
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, username);
 			st.setString(2, password);
-			st.setString(3, keyhash);
+			st.setInt(3, nonce);
 			st.executeUpdate();
 			result = true;
 			st.close();

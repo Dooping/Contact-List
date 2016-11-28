@@ -35,9 +35,11 @@ public class RemoveFriend extends HttpServlet {
 		try {
 			IAuthenticator authenticator = new Authenticator();
 			Account authUser = authenticator.login(request,response);
-			String friend = (String)request.getAttribute("friendName");
+			String friend = request.getParameter("friendName");
+			System.out.println("friend: "+friend);
 			ContactList contactList = new ContactList();
 			contactList.deleteFriend(authUser.getUsername(), friend);
+			RedirectSuccess(request, response, "You and "+friend+" are no longer friends!");
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", REMOVE_FRIEND);
 			response.sendRedirect("/Authenticator/login.html");
@@ -59,6 +61,12 @@ public class RemoveFriend extends HttpServlet {
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
 		request.setAttribute("errorMessage", errorMessage);
 		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/errormessage.jsp");
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void RedirectSuccess(HttpServletRequest request, HttpServletResponse response, String successMessage) throws ServletException, IOException{
+		request.setAttribute("successMessage", successMessage);
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/successmessage.jsp");
 		requestDispatcher.forward(request, response);
 	}
 

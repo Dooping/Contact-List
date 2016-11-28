@@ -1,5 +1,7 @@
 package authenticator;
 
+import java.util.Random;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -33,9 +35,10 @@ public class Authenticator implements IAuthenticator{
 				throw new WrongConfirmationPasswordException();
 			
 			pwd1 = AESencrp.encrypt(pwd1);
-			String key = AESencrp.encrypt(java.util.Base64.getEncoder().encodeToString(AESencrp.generateUserKey().getEncoded()));
+			
+			Random rn = new Random();
 						
-			if(!DatabaseConnection.createUser(name, pwd1, key))
+			if(!DatabaseConnection.createUser(name, pwd1, rn.nextInt()))
 				throw new UserNotCreatedException();
 		}	
 		
