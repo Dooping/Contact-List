@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import authenticator.Account;
 import authenticator.Authenticator;
@@ -60,6 +61,8 @@ public class ContactsList extends HttpServlet {
 			if(!name.equals(sessionUsername)){
 				int id = DatabaseConnection.getAccountId(name);
 				path += "/user/"+id; 
+				HttpSession session = request.getSession(true);
+				session.setAttribute("pageUsername",name);
 			}
 			response.sendRedirect(path);
 		} catch (UndefinedAccount e) {

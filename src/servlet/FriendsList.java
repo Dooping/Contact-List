@@ -59,8 +59,9 @@ public class FriendsList extends HttpServlet {
 			String path="/Authenticator";
 			if(!name.equals(sessionUsername)){
 				int id = DatabaseConnection.getAccountId(name);
-				System.out.println("Name :" + name);
-				request.getSession().setAttribute("pageUsername",name);
+				HttpSession session = request.getSession(true);
+				session.setAttribute("pageUsername",name);
+				
 				path += "/user/"+id; 
 			}
 			response.sendRedirect(path);

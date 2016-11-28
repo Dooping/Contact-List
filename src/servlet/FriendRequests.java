@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import authenticator.Account;
 import authenticator.Authenticator;
@@ -54,13 +55,12 @@ public class FriendRequests extends HttpServlet {
 		String name = request.getParameter("name");
 		String accept_reject = request.getParameter("accept_reject");
 		
-		System.out.println("Name:" + name);
-		System.out.println("accept_reject :" + accept_reject);
-		
 		if(accept_reject.equals("")){
 			try {
 				int id = DatabaseConnection.getAccountId(name);
-				String path = "/Authenticator/user/"+id; 			
+				String path = "/Authenticator/user/"+id; 
+				HttpSession session = request.getSession(true);
+				session.setAttribute("pageUsername",name);
 				response.sendRedirect(path);
 			} catch (UndefinedAccount e) {
 				e.printStackTrace();
