@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,12 +9,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import accesscontrol.AccessControl;
+import accesscontrol.Capability;
 import authenticator.Account;
 import authenticator.Authenticator;
 import authenticator.IAuthenticator;
 import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
+import exceptions.PermissionNotExistsException;
 import exceptions.UndefinedAccount;
 import exceptions.UserIsLoggedInException;
 import exceptions.UserNotLockedException;
@@ -24,7 +29,10 @@ import exceptions.UserNotExistsException;
 @WebServlet("/DeleteUser")
 public class DeleteUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	  public static final String DELETEUSER = "delete_user";
+	public static final String DELETEUSER = "delete_user";
+	private static final String OWNER = "root";
+	private static final String RESOURCE = "user";
+	private static final String OPERATION = "delete";
        
     public DeleteUser() {
         super();
@@ -33,13 +41,22 @@ public class DeleteUser extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		IAuthenticator authenticator = new Authenticator();
-		
+		AccessControl acm = new AccessControl();
 		try {
 			Account acc = authenticator.login(request, response);
-			if (acc.getUsername().equals("root"))
+			try{
+				List<Capability> capabilities = acm.getCapabilities(request);
+				if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE, OPERATION)){
+					Capability c = acm.makeCapability(OWNER, acc.getUsername(), RESOURCE, 
+							OPERATION, System.currentTimeMillis()+3600000);
+					capabilities.add(c);
+				}
+				HttpSession session = request.getSession(true);
+				session.setAttribute("capabilities", capabilities);
 				response.sendRedirect("/Authenticator/deleteuser.html");
-			else
+			} catch (PermissionNotExistsException e) {
 				RedirectError(request, response, "Username " + acc.getUsername() + " can't delete users!");
+			}
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", DELETEUSER);
 			response.sendRedirect("/Authenticator/login.html");

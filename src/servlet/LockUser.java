@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,12 +9,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import accesscontrol.AccessControl;
+import accesscontrol.Capability;
 import authenticator.Account;
 import authenticator.Authenticator;
 import authenticator.IAuthenticator;
 import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
+import exceptions.PermissionNotExistsException;
 import exceptions.UndefinedAccount;
 import exceptions.UserNotExistsException;
 import exceptions.WrongConfirmationPasswordException;
@@ -23,6 +28,9 @@ import exceptions.WrongConfirmationPasswordException;
 public class LockUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String LOCKUSER = "lockuser";
+	private static final String OWNER = "root";
+	private static final String RESOURCE = "user";
+	private static final String OPERATION = "lock";
 
 	public LockUser() {
 		super();
@@ -32,10 +40,20 @@ public class LockUser extends HttpServlet {
 		IAuthenticator authenticator = new Authenticator();
 		try {
 			Account acc = authenticator.login(request, response);
-			if (acc.getUsername().equals("root"))
+			AccessControl acm = new AccessControl();
+			try{
+				List<Capability> capabilities = acm.getCapabilities(request);
+				if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE, OPERATION)){
+					Capability c = acm.makeCapability(OWNER, acc.getUsername(), RESOURCE, 
+							OPERATION, System.currentTimeMillis()+3600000);
+					capabilities.add(c);
+				}
+				HttpSession session = request.getSession(true);
+				session.setAttribute("capabilities", capabilities);
 				response.sendRedirect("/Authenticator/lockuser.html");
-			else
+			} catch (PermissionNotExistsException e) {
 				RedirectError(request, response, "Username " + acc.getUsername() + " can't lock users!");
+			}
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", LOCKUSER);
 			response.sendRedirect("/Authenticator/login.html");

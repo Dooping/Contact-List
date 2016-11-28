@@ -27,10 +27,10 @@ import authenticator.Authenticator;
 @WebServlet("/CreateUser")
 public class CreateUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	  public static final String CREATEUSER = "create_user";
-	  public static final String OWNER = "root";
-	  public static final String RESOURCE = "user";
-	  public static final String OPERATION = "create";
+	public static final String CREATEUSER = "create_user";
+	private static final String OWNER = "root";
+	private static final String RESOURCE = "user";
+	private static final String OPERATION = "create";
 
 	public CreateUser() {
 		super();
