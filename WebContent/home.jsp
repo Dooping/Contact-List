@@ -55,7 +55,7 @@
 		</form>
 		
 		<div>
-			<h3>Personal Info</h3>
+			<h3>Profile</h3>
 			<p>Name: ${name}</p>
 			<p>Age: ${age}</p>
 			<p>Sex: ${sex}</p>
@@ -63,8 +63,16 @@
 			<p>Birth: ${birth}</p>
 			<p>Lives in: ${lives}</p>
 			<p>From: ${from}</p>
+			
+			<h3>Contacts</h3>
 			<p>Email: ${email}</p>
 			<p>Phone Number: ${phonenumber}</p>
+			
+			<h3>Internal Statement</h3>
+			<p>Things here<p>
+			
+			<h3>External Statment</h3>
+			<p>Things here too </p>
 		</div>
 		
 </body>
