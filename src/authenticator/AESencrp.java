@@ -23,8 +23,6 @@ public final class AESencrp {
   		MessageDigest md = MessageDigest.getInstance("SHA-512");
         md.update(Integer.toString(nonce).getBytes());
         byte[] bytes = md.digest(Data.getBytes("UTF-8"));
-        System.out.println(nonce + " " + Data);
-        System.out.println(java.util.Base64.getEncoder().encodeToString(bytes));
         return java.util.Base64.getEncoder().encodeToString(bytes);
     }
 
