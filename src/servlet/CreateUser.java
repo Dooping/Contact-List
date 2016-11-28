@@ -44,17 +44,9 @@ public class CreateUser extends HttpServlet {
 			Account acc = authenticator.login(request, response);
 			try{
 				List<Capability> capabilities = acm.getCapabilities(request);
-				
-				/*for(Capability cp : capabilities)
-					if(cp.getOperation().equals(OPERATION) && cp.getOwner().equals(OWNER) && cp.getResource().equals(RESOURCE)){
-						c = cp;
-						break;
-					}
-				if (c == null)
-					c = new Capability(OWNER, -1, acc.getUsername(), RESOURCE, OPERATION, 0);*/
 				if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE, OPERATION)){
 					Capability c = acm.makeCapability(OWNER, acc.getUsername(), RESOURCE, 
-							OPERATION, System.currentTimeMillis()+10000);
+							OPERATION, System.currentTimeMillis()+3600000);
 					capabilities.add(c);
 				}
 				HttpSession session = request.getSession(true);
