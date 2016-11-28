@@ -621,7 +621,7 @@ public final class DatabaseConnection {
 	
 	public static void createUserDetails(String name){
 		Connection conn = connection();
-		String sql = "INSERT INTO DETAILS('NAME') VALUES (?)";
+		String sql = "INSERT INTO details(name,sex) VALUES (?,'-')";
 		
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);

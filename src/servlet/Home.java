@@ -67,7 +67,9 @@ public class Home extends HttpServlet {
 			try {
 				cd = clist.getContactDetails(user);
 				request.setAttribute("name",user);
-				request.setAttribute("age",clist.getAge(cd.getBirthdate().getTime()));
+				if(cd.getBirthdate()!=null)
+					request.setAttribute("age",clist.getAge(cd.getBirthdate().getTime()));
+				
 				request.setAttribute("sex",cd.getSex());
 				request.setAttribute("work",cd.getWork());
 				request.setAttribute("birth",cd.getBirthdate());
@@ -92,6 +94,7 @@ public class Home extends HttpServlet {
 			response.sendRedirect("/Authenticator/login.html");
 		} catch (Exception e) {
 			RedirectError(request, response, "Exception Error");
+			e.printStackTrace();
 		}
 	}
 
