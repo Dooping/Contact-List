@@ -73,15 +73,24 @@ public class CreateUser extends HttpServlet {
 		String apwd2 = request.getParameter("password_confirmation");
 
 		IAuthenticator authenticator = new Authenticator();
+		AccessControl acm = new AccessControl();
 
 		try {
 			Account acc = authenticator.login(request, response);
-			if (acc.getUsername().equals("root")){
+			try{
+				List<Capability> capabilities = acm.getCapabilities(request);
+				if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE, OPERATION)){
+					Capability c = acm.makeCapability(OWNER, acc.getUsername(), RESOURCE, 
+							OPERATION, System.currentTimeMillis()+3600000);
+					capabilities.add(c);
+				}
+				HttpSession session = request.getSession(true);
+				session.setAttribute("capabilities", capabilities);
 				authenticator.create_account(aname, apwd1, apwd2);
 				RedirectSuccess(request, response, "User Created Successfully!");
-			}
-			else
+			} catch (PermissionNotExistsException e) {
 				RedirectError(request, response, "Username " + acc.getUsername() + " can't create users!");
+			}
 		} catch (EmptyFieldException e) {
 			RedirectError(request, response, "You need to fill all the fields");
 		} catch (UserAlreadyExistsException e) {

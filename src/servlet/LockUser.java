@@ -69,19 +69,28 @@ public class LockUser extends HttpServlet {
 		String username = request.getParameter("username");
 		
 		IAuthenticator authenticator = new Authenticator();
+		AccessControl acm = new AccessControl();
 		
 			try {
 				Account acc = authenticator.login(request, response);
-				if (acc.getUsername().equals("root")){
-					if(username.equals("root")){
-						RedirectError(request, response, "Cant lock root");
+				try{
+					List<Capability> capabilities = acm.getCapabilities(request);
+					if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE, OPERATION)){
+						Capability c = acm.makeCapability(OWNER, acc.getUsername(), RESOURCE, 
+								OPERATION, System.currentTimeMillis()+3600000);
+						capabilities.add(c);
+					}
+					HttpSession session = request.getSession(true);
+					session.setAttribute("capabilities", capabilities);
+					if(username.equals(acc.getUsername())){
+						RedirectError(request, response, "Cant lock/unlock yourself");
 					} else {
 						authenticator.lock_user(username);
-						RedirectSuccess(request, response, "User Locked Successfully!");
+						RedirectSuccess(request, response, "User Locked/Unlocked Successfully!");
 					}
-				}
-				else
+				} catch (PermissionNotExistsException e) {
 					RedirectError(request, response, "Username " + acc.getUsername() + " can't lock users!");
+				}
 			} catch (AuthenticationError e) {
 				request.getSession().setAttribute("origin", LOCKUSER);
 				response.sendRedirect("/Authenticator/login.html");

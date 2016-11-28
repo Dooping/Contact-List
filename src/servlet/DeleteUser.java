@@ -71,19 +71,28 @@ public class DeleteUser extends HttpServlet {
 		String aname = request.getParameter("username");
 		
 		IAuthenticator authenticator = new Authenticator();
+		AccessControl acm = new AccessControl();
 		
 		try {
 			Account acc = authenticator.login(request, response);
-			if (acc.getUsername().equals("root")){
-				if(aname.equals("root")){
-					RedirectError(request, response, "Cant remove root");
-				} else {
-				authenticator.delete_account(aname);
-				RedirectSuccess(request, response, "User Deleted Successfully!");
+			try{
+				List<Capability> capabilities = acm.getCapabilities(request);
+				if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE, OPERATION)){
+					Capability c = acm.makeCapability(OWNER, acc.getUsername(), RESOURCE, 
+							OPERATION, System.currentTimeMillis()+3600000);
+					capabilities.add(c);
 				}
-			}
-			else
+				HttpSession session = request.getSession(true);
+				session.setAttribute("capabilities", capabilities);
+				if(aname.equals(acc.getUsername())){
+					RedirectError(request, response, "Cant remove yourself");
+				} else {
+					authenticator.delete_account(aname);
+					RedirectSuccess(request, response, "User Deleted Successfully!");
+				}
+			} catch (PermissionNotExistsException e) {
 				RedirectError(request, response, "Username " + acc.getUsername() + " can't delete users!");
+			}
 		} catch (EmptyFieldException e) {
 			RedirectError(request, response, "You need to fill all the fields");
 		} catch (UserNotExistsException e) {

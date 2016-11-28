@@ -100,10 +100,30 @@ public final class DatabaseConnection {
 		return result;
 	}
 	
-	public static void lockedUser(String username){
+	public static void lockUser(String username){
 		Connection conn = connection();
 		//String lockUserQuery = "UPDATE accounts SET locked=1 WHERE name = '"+ username +"'";
 		String sql = "UPDATE "+TABLE_NAME+" SET "+LOCKED+"=1 WHERE "+NAME+" = ?";
+		try{
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, username);
+			st.executeUpdate();
+			st.close();
+		} catch(SQLException e){
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void unlockUser(String username){
+		Connection conn = connection();
+		String sql = "UPDATE "+TABLE_NAME+" SET "+LOCKED+"=0 WHERE "+NAME+" = ?";
 		try{
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, username);

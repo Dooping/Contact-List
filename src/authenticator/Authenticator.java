@@ -67,8 +67,12 @@ public class Authenticator implements IAuthenticator{
 			throw new EmptyFieldException();
 		
 		try{
-			this.get_account(name);
-			DatabaseConnection.lockedUser(name);
+			Account acc = this.get_account(name);
+			if (!acc.isLocked())
+				DatabaseConnection.lockUser(name);
+			else
+				DatabaseConnection.unlockUser(name);
+				
 		} catch(UndefinedAccount e){
 			throw new UserNotExistsException();
 		}
@@ -104,11 +108,12 @@ public class Authenticator implements IAuthenticator{
 	public Account login(String name, String pwd) throws AuthenticationError, UndefinedAccount, WrongConfirmationPasswordException {
 		try{
 			Account acc = this.get_account(name);
+			if(acc.isLocked())
+				throw new AuthenticationError();
 			if(!AESencrp.encrypt(pwd).equals(acc.getPassword()))
 				throw new WrongConfirmationPasswordException();
 			DatabaseConnection.login(acc);
-	        //System.out.println(AESencrp.encrypt(java.util.Base64.getEncoder().encodeToString(AESencrp.generateUserKey().getEncoded())));
-			return acc;
+	        return acc;
 		} catch(AuthenticationError e){
 			throw new AuthenticationError();
 		} catch (UndefinedAccount e) {
