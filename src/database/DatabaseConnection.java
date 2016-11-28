@@ -479,14 +479,14 @@ public final class DatabaseConnection {
 	public static void checkPermission(String principal, String resource, String operation) throws PermissionNotExistsException{
 		Connection conn = connection();
 		String sql = "select * from accesscontrol as a "
-				+ "inner join resources as r on a.resource = r.id where principal = ? and r.name = ? a.operation = ?";
+				+ "inner join resources as r on a.resource = r.id where principal = ? and r.name = ?"
+				+ " and a.operation = ?";
 		
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, principal);
 			st.setString(2, resource);
 			st.setString(3, operation);
-			st.executeUpdate();
 			ResultSet set = st.executeQuery();
 			if(!set.first())
 				throw new PermissionNotExistsException();
