@@ -569,11 +569,15 @@ public final class DatabaseConnection {
 	public static boolean setUserDetails(ContactDetailed cd){
 		boolean result = false;
 		Connection conn = DatabaseConnection.connection();
-		String sql = "INSERT INTO DETAILS VALUES (?,?,?,?,?,?,?,?,?);";
+		String sql = "UPDATE DETAILS SET "
+				+ "sex = ? ," + "work = ? ," + "birthdate = ? ," + "location = ? ," + "origin = ? ," + "email = ? ,"
+				+ "phone = ? ," + "internal_statement = ? ," + "external_statement = ? " +  
+				"WHERE NAME = ?;";
+		
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
-			st.setString(1, cd.getName());
-			st.setString(2, String.valueOf(cd.getSex()));
+			st.setString(1, String.valueOf(cd.getSex()));
+			st.setString(2, cd.getWork());
 			st.setDate(3, cd.getBirthdate());
 			st.setString(4, cd.getLocation());
 			st.setString(5, cd.getOrigin());
@@ -581,6 +585,7 @@ public final class DatabaseConnection {
 			st.setString(7, cd.getPhone());
 			st.setString(8, cd.getInternal_statement());
 			st.setString(9, cd.getExternal_statement());
+			st.setString(10, cd.getName());
 			st.executeUpdate();
 			result = true;
 			st.close();

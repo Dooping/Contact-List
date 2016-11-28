@@ -66,10 +66,13 @@ public class ContactList {
 	}
 	
 	public int getAge(long birthDateMillis){
-		//cd.getBirthdate().getTime()
 		GregorianCalendar c = new GregorianCalendar();
 		c.setTimeInMillis(System.currentTimeMillis() - birthDateMillis);
 		return c.get(Calendar.YEAR) - 1970;
+	}
+	
+	public void setContactDetails(ContactDetailed cd){
+		DatabaseConnection.setUserDetails(cd);
 	}
 	
 }
