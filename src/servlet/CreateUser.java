@@ -27,10 +27,10 @@ import authenticator.Authenticator;
 @WebServlet("/CreateUser")
 public class CreateUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	  public static final String CREATEUSER = "create_user";
-	  public static final String OWNER = "root";
-	  public static final String RESOURCE = "user";
-	  public static final String OPERATION = "create";
+	public static final String CREATEUSER = "create_user";
+	private static final String OWNER = "root";
+	private static final String RESOURCE = "user";
+	private static final String OPERATION = "create";
 
 	public CreateUser() {
 		super();
@@ -44,18 +44,9 @@ public class CreateUser extends HttpServlet {
 			Account acc = authenticator.login(request, response);
 			try{
 				List<Capability> capabilities = acm.getCapabilities(request);
-				Capability c = null;
-				for(Capability cp : capabilities)
-					if(cp.getOperation().equals(OPERATION) && cp.getOwner().equals(OWNER) && cp.getResource().equals(RESOURCE)){
-						c = cp;
-						break;
-					}
-				if (c == null)
-					c = new Capability(OWNER, -1, acc.getUsername(), RESOURCE, OPERATION, 0);
-				if(!acm.checkPermission(acc.getUsername(), c, RESOURCE, OPERATION)){
-					System.out.println();
-					capabilities.remove(c);
-					c = acm.makeCapability(OWNER, acc.getUsername(), RESOURCE, OPERATION, System.currentTimeMillis()+3600000, false);
+				if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE, OPERATION)){
+					Capability c = acm.makeCapability(OWNER, acc.getUsername(), RESOURCE, 
+							OPERATION, System.currentTimeMillis()+3600000);
 					capabilities.add(c);
 				}
 				HttpSession session = request.getSession(true);
