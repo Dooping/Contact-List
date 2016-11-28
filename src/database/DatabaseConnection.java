@@ -642,7 +642,7 @@ public final class DatabaseConnection {
 	
 	public static void createUserResources(String name){
 		Connection conn = connection();
-		String sql = "INSERT INTO resources(owner, name) VALUES (?,'profile'),(?,'contacts'),(?,'friends'),(?,'internal')";
+		String sql = "INSERT INTO resources(owner, name, permission) VALUES (?,'profile','internal'),(?,'contacts','internal'),(?,'friends', 'private'),(?,'internal','internal')";
 		
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
