@@ -9,12 +9,26 @@ public class Capability {
 	private String owner,grantee,operation, signature, resource;
 	private long time;
 	
-	public Capability(String owner, String grantee, String resource, String operation,long time ){
+	@SuppressWarnings("unchecked")
+	public Capability(String owner, int nonce, String grantee, String resource, String operation,long time ){
 		this.owner = owner;
 		this.grantee = grantee;
 		this.resource = resource;
 		this.operation = operation;
 		this.time = time;
+		if(nonce >= 0){
+			JSONObject payload = new JSONObject();
+			payload.put("owner", owner);
+			payload.put("grantee", grantee);
+			payload.put("resource", resource);
+			payload.put("operation", operation);
+			payload.put("time", new Long(time));
+			try {
+				this.signature = AESencrp.hash(payload.toJSONString(), nonce);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public Capability(JSONObject token){
@@ -25,21 +39,6 @@ public class Capability {
 		this.operation = (String)payload.get("operation");
 		this.time = (Long)payload.get("time");
 		this.signature = (String)token.get("token");
-	}
-	
-	@SuppressWarnings("unchecked")
-	public String buildToken(int nonce) throws Exception{
-		JSONObject payload = new JSONObject();
-		payload.put("owner", owner);
-		payload.put("grantee", grantee);
-		payload.put("resource", new Integer(resource));
-		payload.put("operation", operation);
-		payload.put("time", new Long(time));
-		String encrPayload = AESencrp.hash(payload.toJSONString(), nonce);
-		JSONObject result = new JSONObject();
-		result.put("payload", payload);
-		result.put("token", encrPayload);
-		return result.toJSONString();
 	}
 	
 	public boolean isValid(){
@@ -91,7 +90,19 @@ public class Capability {
 		JSONObject payload = new JSONObject();
 		payload.put("owner", owner);
 		payload.put("grantee", grantee);
-		payload.put("resource", new Integer(resource));
+		payload.put("resource", resource);
+		payload.put("operation", operation);
+		payload.put("time", new Long(time));
+		payload.put("signature", signature);
+		return payload.toJSONString();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String getPayload(){
+		JSONObject payload = new JSONObject();
+		payload.put("owner", owner);
+		payload.put("grantee", grantee);
+		payload.put("resource", resource);
 		payload.put("operation", operation);
 		payload.put("time", new Long(time));
 		return payload.toJSONString();

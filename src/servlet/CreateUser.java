@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,10 +9,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import accesscontrol.AccessControl;
+import accesscontrol.Capability;
 import authenticator.IAuthenticator;
 import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
+import exceptions.PermissionNotExistsException;
 import exceptions.UndefinedAccount;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotCreatedException;
@@ -23,6 +28,9 @@ import authenticator.Authenticator;
 public class CreateUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	  public static final String CREATEUSER = "create_user";
+	  public static final String OWNER = "root";
+	  public static final String RESOURCE = "user";
+	  public static final String OPERATION = "create";
 
 	public CreateUser() {
 		super();
@@ -31,12 +39,31 @@ public class CreateUser extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		IAuthenticator authenticator = new Authenticator();
+		AccessControl acm = new AccessControl();
 		try {
 			Account acc = authenticator.login(request, response);
-			if (acc.getUsername().equals("root"))
+			try{
+				List<Capability> capabilities = acm.getCapabilities(request);
+				Capability c = null;
+				for(Capability cp : capabilities)
+					if(cp.getOperation().equals(OPERATION) && cp.getOwner().equals(OWNER) && cp.getResource().equals(RESOURCE)){
+						c = cp;
+						break;
+					}
+				if (c == null)
+					c = new Capability(OWNER, -1, acc.getUsername(), RESOURCE, OPERATION, 0);
+				if(!acm.checkPermission(acc.getUsername(), c, RESOURCE, OPERATION)){
+					System.out.println();
+					capabilities.remove(c);
+					c = acm.makeCapability(OWNER, acc.getUsername(), RESOURCE, OPERATION, System.currentTimeMillis()+3600000, false);
+					capabilities.add(c);
+				}
+				HttpSession session = request.getSession(true);
+				session.setAttribute("capabilities", capabilities);
 				response.sendRedirect("/Authenticator/createuser.html");
-			else
+			} catch (PermissionNotExistsException e) {
 				RedirectError(request, response, "Username " + acc.getUsername() + " can't create users!");
+			}
 		} catch (WrongConfirmationPasswordException e) {
 			RedirectError(request, response, "Password confirmation did not match with the password");
 		} catch (AuthenticationError e) {
@@ -44,7 +71,8 @@ public class CreateUser extends HttpServlet {
 			response.sendRedirect("/Authenticator/login.html");
 		} catch (Exception e) {
 			RedirectError(request, response, "Exception Error");
-		} 
+			e.printStackTrace();
+		}  
 		
 	}
 

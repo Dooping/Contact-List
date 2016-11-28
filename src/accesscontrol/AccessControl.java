@@ -20,13 +20,19 @@ public class AccessControl {
 		
 	}
 	
-	public Capability makeCapability(String owner, String grantee, String resource, String operation,long time){
+	public Capability makeCapability(String owner, String grantee, String resource, String operation,long time, boolean ask) throws PermissionNotExistsException{
 		try {
 			DatabaseConnection.checkPermission(grantee, resource, operation);
-			return new Capability(owner, grantee, resource, operation, time);
+			Account acc = DatabaseConnection.getAccount(owner);
+			return new Capability(owner, acc.getNonce(), grantee, resource, operation, time);
 		} catch (PermissionNotExistsException e) {
-			// ask??
-			//popup?
+			if(ask){
+				// ask??
+				//popup?
+			}
+			else
+				throw new PermissionNotExistsException();
+		} catch (UndefinedAccount e) {
 			e.printStackTrace();
 		}
 		
@@ -37,38 +43,43 @@ public class AccessControl {
 		boolean result = false;
 		try {
 			Account acc = DatabaseConnection.getAccount(capability.getOwner());
-			if(AESencrp.hash(capability.toString(), acc.getNonce()).equals(capability.getSignature()))
-				if(principal.equals(capability.getGrantee()) && resource.equals(capability.getResource())
-						&& operation.equals(capability.getOperation()) && capability.isValid())
-					result = true;
+			try {
+				if(AESencrp.hash(capability.getPayload(), acc.getNonce()).equals(capability.getSignature()))
+					if(principal.equals(capability.getGrantee()) && resource.equals(capability.getResource())
+							&& operation.equals(capability.getOperation()) && capability.isValid())
+						result = true;
+					else
+						throw new AccessControlError();
 				else
 					throw new AccessControlError();
-			else
-				throw new AccessControlError();
+			} catch (AccessControlError e) {
+				//e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} catch (UndefinedAccount e) {
-			e.printStackTrace();
-		} catch (AccessControlError e) {
-			//make capability??
-			e.printStackTrace();
-		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
+	@SuppressWarnings("unchecked")
 	public List<Capability> getCapabilities(HttpServletRequest req){
-		String[] tokens = req.getParameterValues("capabilities");
+		List<Capability> list = (List<Capability>)req.getSession().getAttribute("capabilities");
+		System.out.println(list);
 		List<Capability> capabilities = new LinkedList<Capability>();
-		JSONParser parser = new JSONParser();
-		for(String t : tokens){
-			try {
-				capabilities.add(new Capability((JSONObject)parser.parse(t)));
-					
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		//JSONParser parser = new JSONParser();
+		if(list != null)
+			/*for(String t : list){
+				try {
+					capabilities.add(new Capability((JSONObject)parser.parse(t)));
+						
+				} catch (ParseException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}*/
+			capabilities = list;
 		return capabilities;
 	}
 }
