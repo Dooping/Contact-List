@@ -37,7 +37,6 @@ public class Login extends HttpServlet {
 			session.setAttribute(USER, authUser.getUsername());
 			session.setAttribute(PWD, authUser.getPassword());
 			String origin = (String)request.getSession().getAttribute("origin");
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/home.jsp");
 			if (origin != null)
 				switch (origin){
 				case Logout.LOGOUT: response.sendRedirect("/Authenticator/Logout");
@@ -66,6 +65,8 @@ public class Login extends HttpServlet {
 				break;
 				case Settings.SETTINGS: response.sendRedirect("/Authenticator/Settings");
 				break;
+				case Home.HOME: response.sendRedirect("/Authenticator");
+				break; 
 				}
 			else
 				System.out.println("no origin");

@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import authenticator.Account;
 import authenticator.Authenticator;
@@ -24,7 +25,7 @@ import exceptions.WrongConfirmationPasswordException;
 public class FriendsList extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	  public static final String FRIEND_LIST = "friend_list";
+	public static final String FRIEND_LIST = "friend_list";
 
 	public FriendsList() {
 		super();
@@ -58,6 +59,8 @@ public class FriendsList extends HttpServlet {
 			String path="/Authenticator";
 			if(!name.equals(sessionUsername)){
 				int id = DatabaseConnection.getAccountId(name);
+				System.out.println("Name :" + name);
+				request.getSession().setAttribute("pageUsername",name);
 				path += "/user/"+id; 
 			}
 			response.sendRedirect(path);
