@@ -13,7 +13,7 @@
 	<h1>Settings</h1>
 	
 	<form name="settingsform" action="/Authenticator/Settings" method="POST">
-  			Sex:<select name="sex">
+  			Sex:<select name="sexSelectedOption">
   					  <option value="-" ${selectedSex eq "F".charAt(0) ? 'selected="selected"' : ''}>-</option>
 					  <option value="female" ${selectedSex eq "F".charAt(0) ? 'selected="selected"' : ''}>Female</option>
 					  <option value="male" ${selectedSex eq "M".charAt(0) ? 'selected="selected"' : ''}>Male</option>
