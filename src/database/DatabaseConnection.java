@@ -448,38 +448,6 @@ public final class DatabaseConnection {
 		return null;
 	}
 	
-	public static Map<String,String> getUserPermissions(String username){
-		Connection conn = connection();
-		
-		String sql = "select name, operation from accesscontrol as a "
-				+ "inner join resources as r on a.resource = r.id where principal = ?";
-
-
-		try {
-			PreparedStatement st = conn.prepareStatement(sql);
-			st.setString(1, username);
-			ResultSet set = st.executeQuery();
-			Map<String,String> permissions = new HashMap<String,String>();
-			while (set.next()) {
-				  String resource = set.getString("name");
-				  String operation = set.getString("operation");
-				  permissions.put(resource,  operation);
-			}
-			st.close();
-			return permissions;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
-	
 	public static boolean setNewPermission(String principal, String owner, String resource, String operation){
 		boolean result = false;
 		Connection conn = connection();
