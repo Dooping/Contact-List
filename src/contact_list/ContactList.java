@@ -3,6 +3,7 @@ package contact_list;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Random;
 
 import database.DatabaseConnection;
 import exceptions.EmptyFieldException;
@@ -103,6 +104,12 @@ public class ContactList {
 			break;
 		}
 		return result;
+	}
+	
+	public void resetPermissions(String username){
+		Random rn = new Random();
+		int nonce = rn.nextInt();
+		DatabaseConnection.resetNonce(username, nonce);
 	}
 	
 }
