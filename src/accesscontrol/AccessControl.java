@@ -36,7 +36,6 @@ public class AccessControl {
 	
 	public boolean checkPermission(String principal, List<Capability> capabilities, String resource, String operation){
 		boolean result = false;
-		System.out.println(principal + " " + resource + " " + operation);
 		try {
 			Capability c = null;
 			for(Capability capability : capabilities)
