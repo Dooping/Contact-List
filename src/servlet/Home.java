@@ -64,6 +64,7 @@ public class Home extends HttpServlet {
 			if(pathInfo.length != 0){
 				HttpSession session = request.getSession(true);
 				user = (String)session.getAttribute("pageUsername");
+				session.setAttribute("pageUsername", user);
 			} else 
 				user = acc.getUsername();
 
@@ -132,6 +133,10 @@ public class Home extends HttpServlet {
 					request.setAttribute("internal_statement", cd.getInternal_statement());
 				
 				request.setAttribute("external_statement", cd.getExternal_statement());
+				String path = request.getRequestURI().substring(request.getContextPath().length());
+				
+				HttpSession session = request.getSession(true);
+				session.setAttribute("path",path);
 				
 			} catch (UndefinedAccount e) {
 				e.printStackTrace();

@@ -67,6 +67,7 @@ public class Login extends HttpServlet {
 				break;
 				case Home.HOME: response.sendRedirect("/Authenticator/");
 				break; 
+				case UserFriends.USER_FRIENDS: response.sendRedirect("/Authenticator/UserFriends");
 				}
 			else
 				System.out.println("no origin");

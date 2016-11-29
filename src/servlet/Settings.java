@@ -114,6 +114,15 @@ public class Settings extends HttpServlet {
 		String contactPermission = contactList.getSelectedDropdown(selectedContactsPermission,"private", "internal", "public");
 		
 		
+		int selectedContactsFriendsVisibility=-1;
+		if(request.getParameter("contacts")!=null)
+			selectedContactsFriendsVisibility= Integer.parseInt(request.getParameter("contactsvisibility"));
+		
+		String contactFriendsVisibility = contactList.getSelectedDropdown(selectedContactsFriendsVisibility,"private", "internal", "public");
+		
+		//Falta fazer o post  da contactFriendsVisibility 
+		System.out.println(contactFriendsVisibility);
+		
 		try {
 			contactList.setInformationPermission(profilePermission, name, "profile"+name);
 			contactList.setInformationPermission(contactPermission, name, "contacts"+name);
