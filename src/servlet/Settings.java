@@ -126,6 +126,7 @@ public class Settings extends HttpServlet {
 		try {
 			contactList.setInformationPermission(profilePermission, name, "profile"+name);
 			contactList.setInformationPermission(contactPermission, name, "contacts"+name);
+			contactList.resetPermissions(name);
 		} catch (InvalidRequestException e) {
 			e.printStackTrace();
 		}

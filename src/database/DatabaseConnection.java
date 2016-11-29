@@ -141,6 +141,27 @@ public final class DatabaseConnection {
 		}
 	}
 	
+	public static void resetNonce(String username, int nonce){
+		Connection conn = connection();
+		String sql = "UPDATE accounts SET nonce = ? WHERE name = ?";
+		try{
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, nonce);
+			st.setString(2, username);
+			st.executeUpdate();
+			st.close();
+		} catch(SQLException e){
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public static boolean changePassword(String username, String password){
 		boolean result = false;
 		Connection conn = connection();
@@ -667,6 +688,8 @@ public final class DatabaseConnection {
 			}
 		}
 	}
+	
+	
 	
 	public static void createUserAccessControl(String name){
 		Connection conn = connection();
