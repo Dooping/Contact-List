@@ -28,7 +28,7 @@
 					  <option value="3" ${selectedSex eq "M".charAt(0) ? 'selected="selected"' : ''}>Male</option>
 				 </select> <br>
   			Work:<input type="text" size=20 name="work" value="${contactDetails.work}"><br>
-  			Birth:<input type="text" size=20 name="birth" value="${contactDetails.birthdate}"><br>
+  			Birth:<input type="date" size=20 name="birth" value="${contactDetails.birthdate}"><br>
   			Lives in:<input type="text" size=20 name="livesin" value="${contactDetails.location}"><br>
   			From:<input type="text" size=20 name="from" value="${contactDetails.origin}"><br>
   			
@@ -40,7 +40,7 @@
 					   </select>
 			</h3>
   			Email<input type="text" size=20 name="email" value="${contactDetails.email}"><br>
-  			Phone Number:<input type="text" size=20 name="phonenumber" value="${contactDetails.phone}"><br>
+  			Phone Number:<input type="text" size=20 name="phonenumber" onkeypress='return event.charCode >= 48 && event.charCode <= 57' value="${contactDetails.phone}"><br>
   			
   			
   			<h3>Internal Statement</h3>
