@@ -102,7 +102,10 @@ public class Settings extends HttpServlet {
 		String email = request.getParameter("email");
 		String phone = request.getParameter("phonenumber");
 		
-		ContactDetailed cd = new ContactDetailed(name, sex, work, sqlBirthdate, location, origin, email, phone, "", "");
+		String internal_statement = request.getParameter("internal_statement_text");
+		String external_statement = request.getParameter("external_statement_text");
+		
+		ContactDetailed cd = new ContactDetailed(name, sex, work, sqlBirthdate, location, origin, email, phone, internal_statement, external_statement);
 	
 		ContactList contactList = new ContactList();
 		contactList.setContactDetails(cd);

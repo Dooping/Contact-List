@@ -52,11 +52,9 @@ public class Home extends HttpServlet {
 			request.setAttribute("welcomeMessage", welcomeMessage);
 
 			String[] pathInfo = request.getPathInfo().split("/");
-			String id = "";
 			String user="";
 			
 			if(pathInfo.length != 0){
-				id = pathInfo[1];
 				HttpSession session = request.getSession(true);
 				user = (String)session.getAttribute("pageUsername");
 			} else 
@@ -77,6 +75,9 @@ public class Home extends HttpServlet {
 				request.setAttribute("from",cd.getOrigin());
 				request.setAttribute("email",cd.getEmail());
 				request.setAttribute("phonenumber",cd.getPhone());
+				request.setAttribute("internal_statement", cd.getInternal_statement());
+				request.setAttribute("external_statement", cd.getExternal_statement());
+				
 			} catch (UndefinedAccount e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

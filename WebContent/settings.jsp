@@ -49,7 +49,7 @@
 						  <option value="public">Public</option>
 					   </select>
 			</h3>
-  			<textarea name="internal_statement_text" cols="60" rows="5"></textarea>
+  			<textarea name="internal_statement_text" cols="60" rows="5">${contactDetails.internal_statement}</textarea>
   			
   			<h3>External Statement <select name="externalstatement">
 	  					  <option value="private">Private</option>
@@ -57,7 +57,7 @@
 						  <option value="public">Public</option>
 					   </select>
 			</h3>
-  			<textarea name="external_statement_text" cols="60" rows="5"></textarea><br>
+  			<textarea name="external_statement_text" cols="60" rows="5">${contactDetails.external_statement}</textarea><br>
   			
   			<input type="submit" value="Save" onClick="{document.form.submit();}"/>
 	</form>

@@ -70,10 +70,10 @@
 			<p>Phone Number: ${phonenumber}</p>
 			
 			<h3>Internal Statement</h3>
-			<p>Things here<p>
+			<p>${internal_statement}<p>
 			
 			<h3>External Statment</h3>
-			<p>Things here too </p>
+			<p>${external_statement}</p>
 		</div>
 		
 </body>
