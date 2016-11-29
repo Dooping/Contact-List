@@ -51,6 +51,10 @@
 			  <input type="submit" value="Friend Requests">
 		</form>
 		
+		<form name="userFriends" action="/Authenticator/UserFriends" method="GET">
+			  <input type="submit" value="User Friends">
+		</form>
+		
 		<form name="settings" action="/Authenticator/Settings" method="GET">
 			  <input type="submit" value="Settings">
 		</form>

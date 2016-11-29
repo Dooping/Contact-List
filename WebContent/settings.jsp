@@ -49,6 +49,13 @@
   			<h3>External Statement</h3>
   			<textarea name="external_statement_text" cols="60" rows="5">${contactDetails.external_statement}</textarea><br>
   			
+  			<h3>Contact Friends Visibility <select name="contactsvisibility">
+	  					  <option value="1" ${selectedContactsFriendsVisibility eq "private" ? 'selected="selected"' : ''} >Private</option>
+						  <option value="2" ${selectedContactsFriendsVisibility eq "internal" ? 'selected="selected"' : ''} >Internal</option>
+						  <option value="3" ${contactsvisibility eq "public" ? 'selected="selected"' : ''} >Public</option>
+					   </select>
+			</h3>
+  			
   			<input type="submit" value="Save" onClick="{document.form.submit();}"/>
 	</form>
 	
