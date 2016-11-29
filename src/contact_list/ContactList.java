@@ -87,7 +87,11 @@ public class ContactList {
 	
 	public void setInformationPermission(String permission, String owner, String resourceName) throws InvalidRequestException{
 		if(!DatabaseConnection.setInformationPermission(permission, owner, resourceName))
-			throw new InvalidRequestException();	
+			throw new InvalidRequestException();
+		if(permission.equals("internal"))
+			DatabaseConnection.refreshFriendsAccessControl(owner, resourceName);
+		else
+			DatabaseConnection.deleteFriendsAccessControl(resourceName, owner);
 	}
 	
 	public String getSelectedDropdown(int dropdown, String r1, String r2, String r3){

@@ -819,4 +819,57 @@ public final class DatabaseConnection {
 		}
 		return result;
 	}
+	
+	public static void refreshFriendsAccessControl(String name, String resource){
+		Connection conn = connection();
+		String sql = "replace INTO accesscontrol(principal, resource, operation) "
+				+ "select name2, id, 'read' from resources as r join (select name as name2 "
+				+ "from ((SELECT accepter as 'name' FROM friendships WHERE requester = ? and accepted = 1)"
+				+ " union "
+				+ "(SELECT requester as name2 FROM friendships WHERE accepter = ? and accepted = 1)) as results "
+				+ "INNER JOIN accounts using (name) where accounts.locked = 0) as n "
+				+ "where r.name = ?";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, name);
+			st.setString(2, name);
+			st.setString(3, resource);
+			System.out.println(st);
+			st.executeUpdate();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void deleteFriendsAccessControl(String resource, String owner){
+		Connection conn = connection();
+		String sql = "delete from accesscontrol where resource in (select id from resources where name = ?) and principal <> ?";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, resource);
+			st.setString(2, owner);
+			st.executeUpdate();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 }
