@@ -75,18 +75,23 @@ public class Home extends HttpServlet {
 				request.setAttribute("name",user);
 				boolean profile = false;
 				AccessControl acm = new AccessControl();
-				try{
-					List<Capability> capabilities = acm.getCapabilities(request);
-					if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE1+user, OPERATION)){
-						Capability c = acm.makeCapability(user, acc.getUsername(), RESOURCE1+user, 
-								OPERATION, System.currentTimeMillis()+3600000);
-						capabilities.add(c);
+
+				String permission = clist.checkInformationPermission(user, RESOURCE1+user);
+				if(!permission.equals("public"))
+					try{
+						List<Capability> capabilities = acm.getCapabilities(request);
+						if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE1+user, OPERATION)){
+							Capability c = acm.makeCapability(user, acc.getUsername(), RESOURCE1+user, 
+									OPERATION, System.currentTimeMillis()+3600000);
+							capabilities.add(c);
+						}
+						HttpSession session = request.getSession(true);
+						session.setAttribute("capabilities", capabilities);
+						profile = true;
+					} catch (PermissionNotExistsException e) {
 					}
-					HttpSession session = request.getSession(true);
-					session.setAttribute("capabilities", capabilities);
+				else
 					profile = true;
-				} catch (PermissionNotExistsException e) {
-				}
 				
 				if(profile){
 					if(cd.getBirthdate()!=null)
@@ -97,38 +102,48 @@ public class Home extends HttpServlet {
 					request.setAttribute("lives",cd.getLocation());
 					request.setAttribute("from",cd.getOrigin());
 				}
-				
+				clist.checkInformationPermission(user, RESOURCE2+user);
 				boolean contacts = false;
-				try{
-					List<Capability> capabilities = acm.getCapabilities(request);
-					if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE2+user, OPERATION)){
-						Capability c = acm.makeCapability(user, acc.getUsername(), RESOURCE2+user, 
-								OPERATION, System.currentTimeMillis()+3600000);
-						capabilities.add(c);
+				
+				permission = clist.checkInformationPermission(user, RESOURCE2+user);
+				if(!permission.equals("public"))
+					try{
+						List<Capability> capabilities = acm.getCapabilities(request);
+						if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE2+user, OPERATION)){
+							Capability c = acm.makeCapability(user, acc.getUsername(), RESOURCE2+user, 
+									OPERATION, System.currentTimeMillis()+3600000);
+							capabilities.add(c);
+						}
+						HttpSession session = request.getSession(true);
+						session.setAttribute("capabilities", capabilities);
+						contacts = true;
+					} catch (PermissionNotExistsException e) {
 					}
-					HttpSession session = request.getSession(true);
-					session.setAttribute("capabilities", capabilities);
+				else
 					contacts = true;
-				} catch (PermissionNotExistsException e) {
-				}
 				if(contacts){
 					request.setAttribute("email",cd.getEmail());
 					request.setAttribute("phonenumber",cd.getPhone());
 				}
 				
 				boolean internal = false;
-				try{
-					List<Capability> capabilities = acm.getCapabilities(request);
-					if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE3+user, OPERATION)){
-						Capability c = acm.makeCapability(user, acc.getUsername(), RESOURCE3+user, 
-								OPERATION, System.currentTimeMillis()+3600000);
-						capabilities.add(c);
+				
+				permission = clist.checkInformationPermission(user, RESOURCE3+user);
+				if(!permission.equals("public"))
+					try{
+						List<Capability> capabilities = acm.getCapabilities(request);
+						if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE3+user, OPERATION)){
+							Capability c = acm.makeCapability(user, acc.getUsername(), RESOURCE3+user, 
+									OPERATION, System.currentTimeMillis()+3600000);
+							capabilities.add(c);
+						}
+						HttpSession session = request.getSession(true);
+						session.setAttribute("capabilities", capabilities);
+						internal = true;
+					} catch (PermissionNotExistsException e) {
 					}
-					HttpSession session = request.getSession(true);
-					session.setAttribute("capabilities", capabilities);
+				else
 					internal = true;
-				} catch (PermissionNotExistsException e) {
-				}
 				if(internal)
 					request.setAttribute("internal_statement", cd.getInternal_statement());
 				
