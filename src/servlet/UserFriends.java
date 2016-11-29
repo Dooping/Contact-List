@@ -63,7 +63,21 @@ public class UserFriends extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		String name = request.getParameter("name");
+		String sessionUsername = (String) request.getSession().getAttribute("username");
+		try {
+			String path="/Authenticator";
+			if(!name.equals(sessionUsername)){
+				int id = DatabaseConnection.getAccountId(name);
+				HttpSession session = request.getSession(true);
+				session.setAttribute("pageUsername",name);
+				
+				path += "/user/"+id; 
+			}
+			response.sendRedirect(path);
+		} catch (UndefinedAccount e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
