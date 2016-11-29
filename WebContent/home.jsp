@@ -32,6 +32,7 @@
 		
 		<form name="addfriend" action="/Authenticator/AddFriend" method="GET">
 			  <input type="submit" value="Add Friend">
+			  <input type="hidden" name="friendName" value="${name}"></input>
 		</form>
 		
 		<form name="removefriend" action="/Authenticator/RemoveFriend" method="GET">

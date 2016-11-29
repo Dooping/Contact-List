@@ -642,14 +642,18 @@ public final class DatabaseConnection {
 	
 	public static void createUserResources(String name){
 		Connection conn = connection();
-		String sql = "INSERT INTO resources(owner, name, permission) VALUES (?,'profile','internal'),(?,'contacts','internal'),(?,'friends', 'private'),(?,'internal','internal')";
+		String sql = "INSERT INTO resources(owner, name, permission) VALUES (?,?,'internal'),(?,?,'internal'),(?,?, 'private'),(?,?,'internal')";
 		
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, name);
-			st.setString(2, name);
+			st.setString(2, "profile"+name);
 			st.setString(3, name);
-			st.setString(4, name);
+			st.setString(4, "contacts"+name);
+			st.setString(5, name);
+			st.setString(6, "friends"+name);
+			st.setString(7, name);
+			st.setString(8, "internal"+name);
 			st.executeUpdate();
 			st.close();
 		} catch (SQLException e) {
@@ -668,12 +672,16 @@ public final class DatabaseConnection {
 		Connection conn = connection();
 		String sql = "INSERT INTO accesscontrol(principal, resource, operation) "
 				+ "select ?, id, 'read' from resources "
-				+ "where owner = ? and name in ('profile','contacts','friends','internal')";
+				+ "where owner = ? and name in (?,?,?,?)";
 		
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, name);
 			st.setString(2, name);
+			st.setString(3, "profile"+name);
+			st.setString(4, "contacts"+name);
+			st.setString(5, "friends"+name);
+			st.setString(6, "internal"+name);
 			st.executeUpdate();
 			st.close();
 		} catch (SQLException e) {

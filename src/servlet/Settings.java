@@ -46,8 +46,8 @@ public class Settings extends HttpServlet {
 			request.setAttribute("contactDetails",contactDetails);
 			request.setAttribute("selectedSex", contactDetails.getSex());
 			
-			String profilePermission = contactList.checkInformationPermission(acc.getUsername(), "profile");
-			String contactPermission = contactList.checkInformationPermission(acc.getUsername(), "contacts");
+			String profilePermission = contactList.checkInformationPermission(acc.getUsername(), "profile"+acc.getUsername());
+			String contactPermission = contactList.checkInformationPermission(acc.getUsername(), "contacts"+acc.getUsername());
 			request.setAttribute("selectedProfilePermission", profilePermission);
 			request.setAttribute("selectedContactPermission", contactPermission);
 			
@@ -60,6 +60,7 @@ public class Settings extends HttpServlet {
 			response.sendRedirect("/Authenticator/login.html");
 		} catch (Exception e) {
 			RedirectError(request, response, "Exception Error");
+			e.printStackTrace();
 		}
 	}
 
@@ -114,8 +115,8 @@ public class Settings extends HttpServlet {
 		
 		
 		try {
-			contactList.setInformationPermission(profilePermission, name, "profile");
-			contactList.setInformationPermission(contactPermission, name, "contacts");
+			contactList.setInformationPermission(profilePermission, name, "profile"+name);
+			contactList.setInformationPermission(contactPermission, name, "contacts"+name);
 		} catch (InvalidRequestException e) {
 			e.printStackTrace();
 		}

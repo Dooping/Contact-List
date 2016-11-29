@@ -21,12 +21,15 @@ import javax.servlet.http.HttpSession;
 
 import com.mysql.jdbc.TimeUtil;
 
+import accesscontrol.AccessControl;
+import accesscontrol.Capability;
 import authenticator.Account;
 import authenticator.Authenticator;
 import authenticator.IAuthenticator;
 import contact_list.ContactDetailed;
 import contact_list.ContactList;
 import exceptions.AuthenticationError;
+import exceptions.PermissionNotExistsException;
 import exceptions.UndefinedAccount;
 import exceptions.WrongConfirmationPasswordException;
 
@@ -36,6 +39,10 @@ public class Home extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	public static final String HOME = "home";
+	private static final String RESOURCE1 = "profile";
+	private static final String RESOURCE2 = "contacts";
+	private static final String RESOURCE3 = "internal";
+	private static final String OPERATION = "read";
 
 	public Home() {
 		super();
@@ -65,21 +72,68 @@ public class Home extends HttpServlet {
 			try {
 				cd = clist.getContactDetails(user);
 				request.setAttribute("name",user);
-				if(cd.getBirthdate()!=null)
-					request.setAttribute("age",clist.getAge(cd.getBirthdate().getTime()));
+				boolean profile = false;
+				AccessControl acm = new AccessControl();
+				try{
+					List<Capability> capabilities = acm.getCapabilities(request);
+					if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE1+user, OPERATION)){
+						Capability c = acm.makeCapability(user, acc.getUsername(), RESOURCE1+user, 
+								OPERATION, System.currentTimeMillis()+3600000);
+						capabilities.add(c);
+					}
+					HttpSession session = request.getSession(true);
+					session.setAttribute("capabilities", capabilities);
+					profile = true;
+				} catch (PermissionNotExistsException e) {
+				}
 				
-				request.setAttribute("sex",cd.getSex());
-				request.setAttribute("work",cd.getWork());
-				request.setAttribute("birth",cd.getBirthdate());
-				request.setAttribute("lives",cd.getLocation());
-				request.setAttribute("from",cd.getOrigin());
-				request.setAttribute("email",cd.getEmail());
-				request.setAttribute("phonenumber",cd.getPhone());
-				request.setAttribute("internal_statement", cd.getInternal_statement());
+				if(profile){
+					if(cd.getBirthdate()!=null)
+						request.setAttribute("age",clist.getAge(cd.getBirthdate().getTime()));
+					request.setAttribute("sex",cd.getSex());
+					request.setAttribute("work",cd.getWork());
+					request.setAttribute("birth",cd.getBirthdate());
+					request.setAttribute("lives",cd.getLocation());
+					request.setAttribute("from",cd.getOrigin());
+				}
+				
+				boolean contacts = false;
+				try{
+					List<Capability> capabilities = acm.getCapabilities(request);
+					if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE2+user, OPERATION)){
+						Capability c = acm.makeCapability(user, acc.getUsername(), RESOURCE2+user, 
+								OPERATION, System.currentTimeMillis()+3600000);
+						capabilities.add(c);
+					}
+					HttpSession session = request.getSession(true);
+					session.setAttribute("capabilities", capabilities);
+					contacts = true;
+				} catch (PermissionNotExistsException e) {
+				}
+				if(contacts){
+					request.setAttribute("email",cd.getEmail());
+					request.setAttribute("phonenumber",cd.getPhone());
+				}
+				
+				boolean internal = false;
+				try{
+					List<Capability> capabilities = acm.getCapabilities(request);
+					if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE3+user, OPERATION)){
+						Capability c = acm.makeCapability(user, acc.getUsername(), RESOURCE3+user, 
+								OPERATION, System.currentTimeMillis()+3600000);
+						capabilities.add(c);
+					}
+					HttpSession session = request.getSession(true);
+					session.setAttribute("capabilities", capabilities);
+					internal = true;
+				} catch (PermissionNotExistsException e) {
+				}
+				if(internal)
+					request.setAttribute("internal_statement", cd.getInternal_statement());
+				
 				request.setAttribute("external_statement", cd.getExternal_statement());
 				
 			} catch (UndefinedAccount e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
