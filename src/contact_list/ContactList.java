@@ -8,6 +8,7 @@ import database.DatabaseConnection;
 import exceptions.EmptyFieldException;
 import exceptions.UndefinedAccount;
 import exceptions.InvalidRequestException;
+import exceptions.PermissionNotExistsException;
 
 public class ContactList {
 	
@@ -73,6 +74,31 @@ public class ContactList {
 	
 	public void setContactDetails(ContactDetailed cd){
 		DatabaseConnection.setUserDetails(cd);
+	}
+	
+	public String checkInformationPermission(String owner, String resourceName) throws PermissionNotExistsException{
+		return DatabaseConnection.checkInformationPermission(owner, resourceName);
+	}
+	
+	public void setInformationPermission(String permission, String owner, String resourceName) throws InvalidRequestException{
+		if(!DatabaseConnection.setInformationPermission(permission, owner, resourceName))
+			throw new InvalidRequestException();	
+	}
+	
+	public String getSelectedDropdown(int dropdown, String r1, String r2, String r3){
+		String result = "";
+		switch(dropdown){
+		case 1:
+			result = r1;
+			break;
+		case 2:
+			result = r2;
+			break;
+		case 3:
+			result = r3;
+			break;
+		}
+		return result;
 	}
 	
 }

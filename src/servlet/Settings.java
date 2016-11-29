@@ -1,12 +1,9 @@
 package servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.RequestDispatcher;
@@ -22,9 +19,9 @@ import authenticator.IAuthenticator;
 import contact_list.ContactDetailed;
 import contact_list.ContactList;
 import exceptions.AuthenticationError;
+import exceptions.InvalidRequestException;
 import exceptions.WrongConfirmationPasswordException;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 
 
@@ -48,6 +45,12 @@ public class Settings extends HttpServlet {
 			ContactDetailed contactDetails = contactList.getContactDetails(acc.getUsername());
 			request.setAttribute("contactDetails",contactDetails);
 			request.setAttribute("selectedSex", contactDetails.getSex());
+			
+			String profilePermission = contactList.checkInformationPermission(acc.getUsername(), "profile");
+			String contactPermission = contactList.checkInformationPermission(acc.getUsername(), "contacts");
+			request.setAttribute("selectedProfilePermission", profilePermission);
+			request.setAttribute("selectedContactPermission", contactPermission);
+			
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/settings.jsp");
 			requestDispatcher.forward(request, response);
 		} catch (WrongConfirmationPasswordException e) {
@@ -64,25 +67,13 @@ public class Settings extends HttpServlet {
 		
 		String name = (String) request.getSession().getAttribute("username");
 		
-		String selectedItem="";
+		ContactList contactList = new ContactList();
+		
+		int sexSelectedItem=-1;
 		if(request.getParameter("sexSelectedOption")!=null)
-		{
-		   selectedItem= request.getParameter("sexSelectedOption");
-		}
+			sexSelectedItem= Integer.parseInt(request.getParameter("sexSelectedOption"));
 		
-		char sex;
-		switch(selectedItem){
-		case "male":
-			sex = 'M';
-			break;
-		case "female":
-			sex = 'F';
-			break;
-		default:
-			sex ='-';
-			break;
-		}
-		
+		char sex = contactList.getSelectedDropdown(sexSelectedItem, "-", "F", "M").charAt(0);
 		
 		String work = request.getParameter("work");
 		
@@ -107,8 +98,28 @@ public class Settings extends HttpServlet {
 		
 		ContactDetailed cd = new ContactDetailed(name, sex, work, sqlBirthdate, location, origin, email, phone, internal_statement, external_statement);
 	
-		ContactList contactList = new ContactList();
 		contactList.setContactDetails(cd);
+		
+		int selectedProfilePermission=-1;
+		if(request.getParameter("profile")!=null)
+			selectedProfilePermission= Integer.parseInt(request.getParameter("profile"));
+		
+		String profilePermission = contactList.getSelectedDropdown(selectedProfilePermission,"private", "internal", "public");
+		
+		int selectedContactsPermission=-1;
+		if(request.getParameter("contacts")!=null)
+			selectedContactsPermission= Integer.parseInt(request.getParameter("contacts"));
+		
+		String contactPermission = contactList.getSelectedDropdown(selectedContactsPermission,"private", "internal", "public");
+		
+		
+		try {
+			contactList.setInformationPermission(profilePermission, name, "profile");
+			contactList.setInformationPermission(contactPermission, name, "contacts");
+		} catch (InvalidRequestException e) {
+			e.printStackTrace();
+		}
+		
 		response.sendRedirect("/Authenticator");
 	}
 	

@@ -16,16 +16,16 @@
 	<form name="settingsform" action="/Authenticator/Settings" method="POST">
   			
   			
-  			<h3>Profile <select name="about">
-	  					  <option value="private">Private</option>
-						  <option value="internal">Internal</option>
-						  <option value="public">Public</option>
+  			<h3>Profile <select name="profile">
+	  					  <option value="1" ${selectedProfilePermission eq "private" ? 'selected="selected"' : ''}>Private</option>
+						  <option value="2"  ${selectedProfilePermission eq "internal" ? 'selected="selected"' : ''}>Internal</option>
+						  <option value="3"  ${selectedProfilePermission eq "public" ? 'selected="selected"' : ''}>Public</option>
 					   </select>
 			</h3>
   			Sex:<select name="sexSelectedOption">
-  					  <option value="-" ${selectedSex eq "F".charAt(0) ? 'selected="selected"' : ''}>-</option>
-					  <option value="female" ${selectedSex eq "F".charAt(0) ? 'selected="selected"' : ''}>Female</option>
-					  <option value="male" ${selectedSex eq "M".charAt(0) ? 'selected="selected"' : ''}>Male</option>
+  					  <option value="1" ${selectedSex eq "-".charAt(0) ? 'selected="selected"' : ''}>-</option>
+					  <option value="2" ${selectedSex eq "F".charAt(0) ? 'selected="selected"' : ''}>Female</option>
+					  <option value="3" ${selectedSex eq "M".charAt(0) ? 'selected="selected"' : ''}>Male</option>
 				 </select> <br>
   			Work:<input type="text" size=20 name="work" value="${contactDetails.work}"><br>
   			Birth:<input type="text" size=20 name="birth" value="${contactDetails.birthdate}"><br>
@@ -34,29 +34,19 @@
   			
   			
   			<h3>Contacts <select name="contacts">
-	  					  <option value="private">Private</option>
-						  <option value="internal">Internal</option>
-						  <option value="public">Public</option>
+	  					  <option value="1" ${selectedContactPermission eq "private" ? 'selected="selected"' : ''} >Private</option>
+						  <option value="2" ${selectedContactPermission eq "internal" ? 'selected="selected"' : ''} >Internal</option>
+						  <option value="3" ${selectedContactPermission eq "public" ? 'selected="selected"' : ''} >Public</option>
 					   </select>
 			</h3>
   			Email<input type="text" size=20 name="email" value="${contactDetails.email}"><br>
-  			Phone Number:<type="text" size=20 name="phonenumber" value="${contactDetails.phone}"><br>
+  			Phone Number:<input type="text" size=20 name="phonenumber" value="${contactDetails.phone}"><br>
   			
   			
-  			<h3>Internal Statement <select name="internalstatement">
-	  					  <option value="private">Private</option>
-						  <option value="internal">Internal</option>
-						  <option value="public">Public</option>
-					   </select>
-			</h3>
+  			<h3>Internal Statement</h3>
   			<textarea name="internal_statement_text" cols="60" rows="5">${contactDetails.internal_statement}</textarea>
   			
-  			<h3>External Statement <select name="externalstatement">
-	  					  <option value="private">Private</option>
-						  <option value="internal">Internal</option>
-						  <option value="public">Public</option>
-					   </select>
-			</h3>
+  			<h3>External Statement</h3>
   			<textarea name="external_statement_text" cols="60" rows="5">${contactDetails.external_statement}</textarea><br>
   			
   			<input type="submit" value="Save" onClick="{document.form.submit();}"/>

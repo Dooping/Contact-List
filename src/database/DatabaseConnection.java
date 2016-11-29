@@ -663,4 +663,57 @@ public final class DatabaseConnection {
 			}
 		}
 	}
+	
+	public static String checkInformationPermission(String owner, String resourceName) throws PermissionNotExistsException{
+		String result = null;
+		Connection conn = connection();
+		String sql = "SELECT PERMISSION FROM RESOURCES WHERE OWNER = ? AND NAME = ?;";
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, owner);
+			st.setString(2, resourceName);
+			ResultSet set = st.executeQuery();
+			if(!set.first())
+				throw new PermissionNotExistsException();
+			result = set.getString("permission");
+			st.close();
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	public static boolean setInformationPermission(String permission, String owner, String resourceName){
+		boolean result = false;
+		Connection conn = DatabaseConnection.connection();
+		String sql = "UPDATE RESOURCES SET permission = ? where owner = ? and name = ? ;";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, permission);
+			st.setString(2, owner);
+			st.setString(3, resourceName);
+			st.executeUpdate();
+			result = true;
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 }
