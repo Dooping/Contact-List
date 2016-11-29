@@ -36,9 +36,10 @@ public class AddFriend extends HttpServlet {
 		try {
 			IAuthenticator authenticator = new Authenticator();
 			Account authUser = authenticator.login(request,response);
-			String accepter = (String)request.getAttribute("accepterName");
+			String friend = request.getParameter("friendName");
 			ContactList contactList = new ContactList();
-			contactList.newFriendRequest(authUser.getUsername(), accepter);
+			contactList.newFriendRequest(authUser.getUsername(), friend);
+			RedirectSuccess(request, response, "Friend Request Sent!");
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", ADD_FRIEND);
 			response.sendRedirect("/Authenticator/login.html");
@@ -60,6 +61,12 @@ public class AddFriend extends HttpServlet {
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
 		request.setAttribute("errorMessage", errorMessage);
 		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/errormessage.jsp");
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void RedirectSuccess(HttpServletRequest request, HttpServletResponse response, String successMessage) throws ServletException, IOException{
+		request.setAttribute("successMessage", successMessage);
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/successmessage.jsp");
 		requestDispatcher.forward(request, response);
 	}
 
