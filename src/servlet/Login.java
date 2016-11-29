@@ -65,7 +65,7 @@ public class Login extends HttpServlet {
 				break;
 				case Settings.SETTINGS: response.sendRedirect("/Authenticator/Settings");
 				break;
-				case Home.HOME: response.sendRedirect("/Authenticator");
+				case Home.HOME: response.sendRedirect("/Authenticator/");
 				break; 
 				}
 			else

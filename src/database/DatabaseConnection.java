@@ -664,6 +664,30 @@ public final class DatabaseConnection {
 		}
 	}
 	
+	public static void createUserAccessControl(String name){
+		Connection conn = connection();
+		String sql = "INSERT INTO accesscontrol(principal, resource, operation) "
+				+ "select ?, id, 'read' from resources "
+				+ "where owner = ? and name in ('profile','contacts','friends','internal')";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, name);
+			st.setString(2, name);
+			st.executeUpdate();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public static String checkInformationPermission(String owner, String resourceName) throws PermissionNotExistsException{
 		String result = null;
 		Connection conn = connection();
