@@ -11,12 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import accesscontrol.AccessControl;
+import accesscontrol.Capability;
 import authenticator.Account;
 import authenticator.Authenticator;
 import authenticator.IAuthenticator;
 import contact_list.ContactList;
 import database.DatabaseConnection;
 import exceptions.AuthenticationError;
+import exceptions.PermissionNotExistsException;
 import exceptions.UndefinedAccount;
 import exceptions.WrongConfirmationPasswordException;
 
@@ -26,6 +29,8 @@ public class UserFriends extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	public static final String USER_FRIENDS = "user_friends";
+	private static final String RESOURCE = "friends";
+	private static final String OPERATION = "read";
 
 	public UserFriends() {
 		super();
@@ -45,6 +50,19 @@ public class UserFriends extends HttpServlet {
 				userPage = (String)session.getAttribute("pageUsername");
 			} else 
 				userPage = acc.getUsername();
+			
+			AccessControl acm = new AccessControl();
+			try{
+				List<Capability> capabilities = acm.getCapabilities(request);
+				if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE, OPERATION)){
+					Capability c = acm.makeCapability(userPage, acc.getUsername(), RESOURCE, 
+							OPERATION, System.currentTimeMillis()+3600000);
+					capabilities.add(c);
+				}
+				session.setAttribute("capabilities", capabilities);
+			} catch (PermissionNotExistsException e) {
+				RedirectError(request, response, "You do not have permission to see this user's friend list!");
+			}
 			
 			List<String> friendList = contactList.listFriends(userPage);
 			int listSize = friendList.size();
