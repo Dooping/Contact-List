@@ -46,6 +46,8 @@ public class ContactList {
 			throw new EmptyFieldException();
 		if(!DatabaseConnection.deleteFriend(user, friend))
 			throw new InvalidRequestException();
+		DatabaseConnection.deleteFriendAccessControl(user, friend);
+		DatabaseConnection.deleteFriendAccessControl(friend, user);
 	}
 	
 	public void acceptFriend(String requester, String accepter) throws EmptyFieldException, InvalidRequestException{
@@ -53,6 +55,8 @@ public class ContactList {
 			throw new EmptyFieldException();
 		if(!DatabaseConnection.acceptFriendRequest(requester, accepter))
 			throw new InvalidRequestException();
+		DatabaseConnection.addFriendAccessControl(requester, accepter);
+		DatabaseConnection.addFriendAccessControl(accepter, requester);
 	}
 	
 	public void rejectFriend(String requester, String accepter) throws EmptyFieldException, InvalidRequestException{

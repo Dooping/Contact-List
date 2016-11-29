@@ -688,6 +688,54 @@ public final class DatabaseConnection {
 		}
 	}
 	
+	public static void addFriendAccessControl(String name, String friend){
+		Connection conn = connection();
+		String sql = "INSERT INTO accesscontrol(principal, resource, operation) "
+				+ "select ?, id, 'read' from resources "
+				+ "where owner = ? and name in (select name from resources where permission = 'internal' and owner = ?)";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, name);
+			st.setString(2, friend);
+			st.setString(3, friend);
+			st.executeUpdate();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void deleteFriendAccessControl(String name, String friend){
+		Connection conn = connection();
+		String sql = "delete from accesscontrol where principal = ?"
+				+ " and resource in (select id from resources where owner = ?)";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, name);
+			st.setString(2, friend);
+			st.executeUpdate();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public static String checkInformationPermission(String owner, String resourceName) throws PermissionNotExistsException{
 		String result = null;
 		Connection conn = connection();
