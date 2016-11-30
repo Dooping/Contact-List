@@ -92,7 +92,8 @@ public class Home extends HttpServlet {
 					}
 				else
 					profile = true;
-				
+	
+				String displayProfile="";
 				if(profile){
 					if(cd.getBirthdate()!=null)
 						request.setAttribute("age",clist.getAge(cd.getBirthdate().getTime()));
@@ -101,7 +102,11 @@ public class Home extends HttpServlet {
 					request.setAttribute("birth",cd.getBirthdate());
 					request.setAttribute("lives",cd.getLocation());
 					request.setAttribute("from",cd.getOrigin());
-				}
+				} else 
+					displayProfile = "none";
+				
+				request.setAttribute("displayProfile", displayProfile);
+				
 				clist.checkInformationPermission(user, RESOURCE2+user);
 				boolean contacts = false;
 				
@@ -121,10 +126,15 @@ public class Home extends HttpServlet {
 					}
 				else
 					contacts = true;
+				
+				String displayContacts="";
 				if(contacts){
 					request.setAttribute("email",cd.getEmail());
 					request.setAttribute("phonenumber",cd.getPhone());
-				}
+				} else 
+					displayContacts = "none";
+				
+				request.setAttribute("displayContacts", displayContacts);
 				
 				boolean internal = false;
 				

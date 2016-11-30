@@ -60,7 +60,7 @@
 			  <input type="submit" value="Settings">
 		</form>
 		
-		<div>
+		<div style="display:${displayProfile}">
 			<h3>Profile</h3>
 			<p>Name: ${name}</p>
 			<p>Age: ${age}</p>
@@ -69,14 +69,17 @@
 			<p>Birth: ${birth}</p>
 			<p>Lives in: ${lives}</p>
 			<p>From: ${from}</p>
-			
+		</div>
+		<div style="display:${displayContacts}">
 			<h3>Contacts</h3>
 			<p>Email: ${email}</p>
 			<p>Phone Number: ${phonenumber}</p>
-			
+		</div>
+		<div>
 			<h3>Internal Statement</h3>
 			<p>${internal_statement}<p>
-			
+		</div>
+		<div>	
 			<h3>External Statment</h3>
 			<p>${external_statement}</p>
 		</div>
