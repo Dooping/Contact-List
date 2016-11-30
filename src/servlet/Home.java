@@ -159,8 +159,14 @@ public class Home extends HttpServlet {
 					}
 				else
 					internal = true;
+				
+				String displayInternal = "";
 				if(internal)
 					request.setAttribute("internal_statement", cd.getInternal_statement());
+				else 
+					displayInternal = "none";
+				
+				request.setAttribute("displayInternal", displayInternal);
 				
 				request.setAttribute("external_statement", cd.getExternal_statement());
 				String path = request.getRequestURI().substring(request.getContextPath().length());

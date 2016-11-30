@@ -59,10 +59,10 @@
 		<form name="settings" action="/Authenticator/Settings" method="GET">
 			  <input type="submit" value="Settings">
 		</form>
-		
+			
+		<h3>Profile</h3>
+		<p>Name: ${name}</p>
 		<div style="display:${displayProfile}">
-			<h3>Profile</h3>
-			<p>Name: ${name}</p>
 			<p>Age: ${age}</p>
 			<p>Sex: ${sex}</p>
 			<p>Work: ${work}</p>
@@ -75,7 +75,7 @@
 			<p>Email: ${email}</p>
 			<p>Phone Number: ${phonenumber}</p>
 		</div>
-		<div>
+		<div style="display:${displayInternal}">
 			<h3>Internal Statement</h3>
 			<p>${internal_statement}<p>
 		</div>
