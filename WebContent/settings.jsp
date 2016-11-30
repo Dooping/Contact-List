@@ -50,9 +50,9 @@
   			<textarea name="external_statement_text" cols="60" rows="5">${contactDetails.external_statement}</textarea><br>
   			
   			<h3>Contact Friends Visibility <select name="contactsvisibility">
-	  					  <option value="1" ${selectedContactsFriendsVisibility eq "private" ? 'selected="selected"' : ''} >Private</option>
-						  <option value="2" ${selectedContactsFriendsVisibility eq "internal" ? 'selected="selected"' : ''} >Internal</option>
-						  <option value="3" ${contactsvisibility eq "public" ? 'selected="selected"' : ''} >Public</option>
+	  					  <option value="1" ${selectedfriendsPermission eq "private" ? 'selected="selected"' : ''} >Private</option>
+						  <option value="2" ${selectedfriendsPermission eq "internal" ? 'selected="selected"' : ''} >Internal</option>
+						  <option value="3" ${selectedfriendsPermission eq "public" ? 'selected="selected"' : ''} >Public</option>
 					   </select>
 			</h3>
   			

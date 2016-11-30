@@ -48,8 +48,12 @@ public class Settings extends HttpServlet {
 			
 			String profilePermission = contactList.checkInformationPermission(acc.getUsername(), "profile"+acc.getUsername());
 			String contactPermission = contactList.checkInformationPermission(acc.getUsername(), "contacts"+acc.getUsername());
+			String friendsPermission = contactList.checkInformationPermission(acc.getUsername(), "friends"+acc.getUsername());
+			
 			request.setAttribute("selectedProfilePermission", profilePermission);
 			request.setAttribute("selectedContactPermission", contactPermission);
+			request.setAttribute("selectedfriendsPermission", friendsPermission);
+			
 			
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/settings.jsp");
 			requestDispatcher.forward(request, response);
