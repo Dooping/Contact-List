@@ -19,16 +19,8 @@ import exceptions.UndefinedAccount;
 
 public final class DatabaseConnection {
 
-	public static final String DATABASE_NAME="SS";
-	public static final String TABLE_NAME="accounts";
-	private static final String NAME = "name";
-	private static final String PWDHASH = "pwdhash";
-	private static final String LOGGED_IN = "logged_in";
-	private static final String LOCKED = "locked";
 	
-	
-	
-	private static final String URL = "jdbc:mysql://localhost/"+DATABASE_NAME;
+	private static final String URL = "jdbc:mysql://localhost/SS";
 	private static final String USER = "root";
 	private static final String PASSWORD = "root";
 	private static final String REMOVE_SSL_WARNING = "?useSSL=false";
@@ -78,7 +70,7 @@ public final class DatabaseConnection {
 		boolean result = false;
 		Connection conn = connection();
 		//String deleteUserQuery = "DELETE FROM accounts WHERE name = '"+username+"';";
-		String sql = "DELETE FROM "+ TABLE_NAME +" WHERE "+NAME+" = ?;";
+		String sql = "DELETE FROM accounts WHERE name = ?;";
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, username);
@@ -101,7 +93,7 @@ public final class DatabaseConnection {
 	public static void lockUser(String username){
 		Connection conn = connection();
 		//String lockUserQuery = "UPDATE accounts SET locked=1 WHERE name = '"+ username +"'";
-		String sql = "UPDATE "+TABLE_NAME+" SET "+LOCKED+"=1 WHERE "+NAME+" = ?";
+		String sql = "UPDATE accounts SET locked=1 WHERE name = ?";
 		try{
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, username);
@@ -121,7 +113,7 @@ public final class DatabaseConnection {
 	
 	public static void unlockUser(String username){
 		Connection conn = connection();
-		String sql = "UPDATE "+TABLE_NAME+" SET "+LOCKED+"=0 WHERE "+NAME+" = ?";
+		String sql = "UPDATE accounts SET locked=0 WHERE name = ?";
 		try{
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, username);
@@ -164,7 +156,7 @@ public final class DatabaseConnection {
 		boolean result = false;
 		Connection conn = connection();
 		//String changePasswordQuery = "UPDATE accounts SET pwdhash = '"+password+"' WHERE name = '"+username+"'";
-		String sql = "UPDATE "+TABLE_NAME+" SET "+PWDHASH+" = ? WHERE "+NAME+" = ?";
+		String sql = "UPDATE accounts SET pwdhash = ? WHERE name = ?";
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, password);
@@ -188,7 +180,7 @@ public final class DatabaseConnection {
 	public static void logout(IAccount acc){
 		Connection conn = connection();
 		//String query = "UPDATE accounts SET logged_in = 0 WHERE name = '"+acc.getUsername()+"'";
-		String sql = "UPDATE "+TABLE_NAME+" SET "+LOGGED_IN+" = 0 WHERE "+NAME+" = ?";
+		String sql = "UPDATE accounts SET logged_in = 0 WHERE name = ?";
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, acc.getUsername());
@@ -209,8 +201,8 @@ public final class DatabaseConnection {
 	public static void login(IAccount acc) throws AuthenticationError{
 		Connection conn = connection();
 		//String query = "UPDATE accounts SET logged_in = 1 WHERE (name = '"+ acc.getUsername() + "' AND pwdhash = '" + acc.getPassword() + "')";
-		String sql = "UPDATE "+TABLE_NAME+" SET "+LOGGED_IN+" = 1 WHERE ("+NAME+" = ?"
-				+ " AND "+PWDHASH+" = ?)";
+		String sql = "UPDATE accounts SET logged_in = 1 WHERE (name = ?"
+				+ " AND pwdhash = ?)";
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, acc.getUsername());
@@ -233,7 +225,7 @@ public final class DatabaseConnection {
 	public static Account getAccount(String name) throws UndefinedAccount{
 		Connection conn = connection();
 		//String query = "SELECT * FROM accounts WHERE name = '"+name+"'";
-		String sql = "SELECT * FROM "+TABLE_NAME+" WHERE "+NAME+" = ?";
+		String sql = "SELECT * FROM accounts WHERE name = ?";
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, name);
