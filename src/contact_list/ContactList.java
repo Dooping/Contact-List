@@ -46,9 +46,11 @@ public class ContactList {
 			throw new InvalidRequestException();
 	}
 	
-	public void deleteFriend(String user, String friend) throws EmptyFieldException, InvalidRequestException{
+	public void deleteFriend(String user, String friend) throws EmptyFieldException, InvalidRequestException, RequestSelfException{
 		if (user.length() == 0 || friend.length() == 0)
 			throw new EmptyFieldException();
+		if (user.equals(friend))
+			throw new RequestSelfException();
 		if(!DatabaseConnection.deleteFriend(user, friend))
 			throw new InvalidRequestException();
 		DatabaseConnection.deleteFriendAccessControl(user, friend);
