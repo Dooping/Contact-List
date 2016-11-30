@@ -61,12 +61,17 @@ public class Home extends HttpServlet {
 			String[] pathInfo = request.getPathInfo().split("/");
 			String user="";
 			
+			String displayUserFriendButton = "";
 			if(pathInfo.length != 0){
 				HttpSession session = request.getSession(true);
 				user = (String)session.getAttribute("pageUsername");
 				session.setAttribute("pageUsername", user);
-			} else 
+			} else {
 				user = acc.getUsername();
+				displayUserFriendButton = "none";
+			}
+			
+			request.setAttribute("displayUserFriendButton", displayUserFriendButton);
 
 			ContactList clist = new ContactList();
 			ContactDetailed cd;
