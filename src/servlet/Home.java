@@ -184,6 +184,8 @@ public class Home extends HttpServlet {
 			response.sendRedirect("/Authenticator/login.html");
 		} catch (LockedAccount e) {
 			RedirectError(request, response, "This user does not exist");
+		} catch (UndefinedAccount e) {
+			RedirectError(request, response, "This user does not exist");
 		} catch (Exception e) {
 			RedirectError(request, response, "Exception Error");
 			e.printStackTrace();
