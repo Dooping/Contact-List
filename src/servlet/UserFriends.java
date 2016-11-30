@@ -58,8 +58,8 @@ public class UserFriends extends HttpServlet {
 			AccessControl acm = new AccessControl();
 			try{
 				List<Capability> capabilities = acm.getCapabilities(request);
-				if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE, OPERATION)){
-					Capability c = acm.makeCapability(userPage, acc.getUsername(), RESOURCE, 
+				if(!acm.checkPermission(acc.getUsername(), capabilities, RESOURCE+userPage, OPERATION)){
+					Capability c = acm.makeCapability(userPage, acc.getUsername(), RESOURCE+userPage, 
 							OPERATION, System.currentTimeMillis()+3600000);
 					capabilities.add(c);
 				}

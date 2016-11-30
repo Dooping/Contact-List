@@ -826,7 +826,6 @@ public final class DatabaseConnection {
 			st.setString(1, name);
 			st.setString(2, name);
 			st.setString(3, resource);
-			System.out.println(st);
 			st.executeUpdate();
 			st.close();
 		} catch (SQLException e) {
