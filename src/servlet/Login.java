@@ -33,7 +33,7 @@ public class Login extends HttpServlet {
 				throw new EmptyFieldException();
 			HttpSession session = request.getSession(true);
 			Authenticator authenticator = new Authenticator();
-			IAccount authUser = authenticator.login(aname, apwd);
+			IAccount authUser = authenticator.login(aname, apwd, false);
 			session.setAttribute(USER, authUser.getUsername());
 			session.setAttribute(PWD, authUser.getPassword());
 			String origin = (String)request.getSession().getAttribute("origin");

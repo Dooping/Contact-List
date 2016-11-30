@@ -34,7 +34,7 @@ public class Authenticator implements IAuthenticator{
 			if(!pwd1.equals(pwd2))
 				throw new WrongConfirmationPasswordException();
 			
-			pwd1 = AESencrp.encrypt(pwd1);
+			pwd1 = AESencrp.hash(pwd1);
 			
 			Random rn = new Random();
 						
@@ -100,7 +100,7 @@ public class Authenticator implements IAuthenticator{
 		
 		String password = null;
 		try {
-			password = AESencrp.encrypt(pwd1);
+			password = AESencrp.hash(pwd1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -111,12 +111,12 @@ public class Authenticator implements IAuthenticator{
 	
 	
 
-	public Account login(String name, String pwd) throws AuthenticationError, UndefinedAccount, WrongConfirmationPasswordException {
+	public Account login(String name, String pwd, boolean hashed) throws AuthenticationError, UndefinedAccount, WrongConfirmationPasswordException {
 		try{
 			Account acc = this.get_account(name);
 			if(acc.isLocked())
 				throw new AuthenticationError();
-			if(!AESencrp.encrypt(pwd).equals(acc.getPassword()))
+			if((hashed && !pwd.equals(acc.getPassword())) || (!hashed && !AESencrp.hash(pwd).equals(acc.getPassword())))
 				throw new WrongConfirmationPasswordException();
 			DatabaseConnection.login(acc);
 	        return acc;
@@ -145,13 +145,7 @@ public class Authenticator implements IAuthenticator{
 		String pwdhash = (String)session.getAttribute(Login.PWD);
 		if (username == null || pwdhash == null)
 			throw new AuthenticationError();
-		String pwd = null;
-		try {
-			pwd = AESencrp.decrypt(pwdhash);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-		return login(username, pwd);
+		return login(username, pwdhash, true);
 	}
 
 }
