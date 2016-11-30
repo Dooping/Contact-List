@@ -1,15 +1,7 @@
 package servlet;
 
 import java.io.IOException;
-import java.sql.Time;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.Year;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,8 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.mysql.jdbc.TimeUtil;
-
 import accesscontrol.AccessControl;
 import accesscontrol.Capability;
 import authenticator.Account;
@@ -29,6 +19,7 @@ import authenticator.IAuthenticator;
 import contact_list.ContactDetailed;
 import contact_list.ContactList;
 import exceptions.AuthenticationError;
+import exceptions.LockedAccount;
 import exceptions.AccessControlError;
 import exceptions.UndefinedAccount;
 import exceptions.WrongConfirmationPasswordException;
@@ -75,6 +66,9 @@ public class Home extends HttpServlet {
 
 			ContactList clist = new ContactList();
 			ContactDetailed cd;
+			
+			if(clist.isLocked(user))
+				throw new LockedAccount();
 			try {
 				cd = clist.getContactDetails(user);
 				request.setAttribute("name",user);
@@ -182,6 +176,8 @@ public class Home extends HttpServlet {
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", HOME);
 			response.sendRedirect("/Authenticator/login.html");
+		} catch (LockedAccount e) {
+			RedirectError(request, response, "This user does not exist");
 		} catch (Exception e) {
 			RedirectError(request, response, "Exception Error");
 			e.printStackTrace();
@@ -189,7 +185,7 @@ public class Home extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//doGet(request,response);
+		doGet(request,response);
 	}
 
 	private void RedirectError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException{
