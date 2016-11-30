@@ -6,16 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import authenticator.Account;
 import authenticator.IAccount;
 import contact_list.ContactDetailed;
+import exceptions.AccessControlError;
 import exceptions.AuthenticationError;
-import exceptions.PermissionNotExistsException;
 import exceptions.UndefinedAccount;
 
 
@@ -517,7 +515,7 @@ public final class DatabaseConnection {
 		return result;
 	}
 	
-	public static void checkPermission(String principal, String resource, String operation) throws PermissionNotExistsException{
+	public static void checkPermission(String principal, String resource, String operation) throws AccessControlError{
 		Connection conn = connection();
 		String sql = "select * from accesscontrol as a "
 				+ "inner join resources as r on a.resource = r.id where principal = ? and r.name = ?"
@@ -530,7 +528,7 @@ public final class DatabaseConnection {
 			st.setString(3, operation);
 			ResultSet set = st.executeQuery();
 			if(!set.first())
-				throw new PermissionNotExistsException();
+				throw new AccessControlError();
 			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -767,7 +765,7 @@ public final class DatabaseConnection {
 		}
 	}
 	
-	public static String checkInformationPermission(String owner, String resourceName) throws PermissionNotExistsException{
+	public static String checkInformationPermission(String owner, String resourceName) throws AccessControlError{
 		String result = null;
 		Connection conn = connection();
 		String sql = "SELECT PERMISSION FROM RESOURCES WHERE OWNER = ? AND NAME = ?;";
@@ -777,7 +775,7 @@ public final class DatabaseConnection {
 			st.setString(2, resourceName);
 			ResultSet set = st.executeQuery();
 			if(!set.first())
-				throw new PermissionNotExistsException();
+				throw new AccessControlError();
 			result = set.getString("permission");
 			st.close();
 			return result;

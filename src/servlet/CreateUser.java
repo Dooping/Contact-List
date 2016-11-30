@@ -17,7 +17,7 @@ import authenticator.IAuthenticator;
 import contact_list.ContactList;
 import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
-import exceptions.PermissionNotExistsException;
+import exceptions.AccessControlError;
 import exceptions.UndefinedAccount;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotCreatedException;
@@ -53,7 +53,7 @@ public class CreateUser extends HttpServlet {
 				HttpSession session = request.getSession(true);
 				session.setAttribute("capabilities", capabilities);
 				response.sendRedirect("/Authenticator/createuser.html");
-			} catch (PermissionNotExistsException e) {
+			} catch (AccessControlError e) {
 				RedirectError(request, response, "Username " + acc.getUsername() + " can't create users!");
 			}
 		} catch (WrongConfirmationPasswordException e) {
@@ -89,7 +89,7 @@ public class CreateUser extends HttpServlet {
 				session.setAttribute("capabilities", capabilities);
 				authenticator.create_account(aname, apwd1, apwd2);
 				RedirectSuccess(request, response, "User Created Successfully!");
-			} catch (PermissionNotExistsException e) {
+			} catch (AccessControlError e) {
 				RedirectError(request, response, "Username " + acc.getUsername() + " can't create users!");
 			}
 		} catch (EmptyFieldException e) {

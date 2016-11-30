@@ -29,7 +29,7 @@ import authenticator.IAuthenticator;
 import contact_list.ContactDetailed;
 import contact_list.ContactList;
 import exceptions.AuthenticationError;
-import exceptions.PermissionNotExistsException;
+import exceptions.AccessControlError;
 import exceptions.UndefinedAccount;
 import exceptions.WrongConfirmationPasswordException;
 
@@ -88,7 +88,7 @@ public class Home extends HttpServlet {
 						HttpSession session = request.getSession(true);
 						session.setAttribute("capabilities", capabilities);
 						profile = true;
-					} catch (PermissionNotExistsException e) {
+					} catch (AccessControlError e) {
 					}
 				else
 					profile = true;
@@ -117,7 +117,7 @@ public class Home extends HttpServlet {
 						HttpSession session = request.getSession(true);
 						session.setAttribute("capabilities", capabilities);
 						contacts = true;
-					} catch (PermissionNotExistsException e) {
+					} catch (AccessControlError e) {
 					}
 				else
 					contacts = true;
@@ -140,7 +140,7 @@ public class Home extends HttpServlet {
 						HttpSession session = request.getSession(true);
 						session.setAttribute("capabilities", capabilities);
 						internal = true;
-					} catch (PermissionNotExistsException e) {
+					} catch (AccessControlError e) {
 					}
 				else
 					internal = true;

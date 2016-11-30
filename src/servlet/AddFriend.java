@@ -1,7 +1,6 @@
 package servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,12 +8,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import authenticator.Account;
 import authenticator.Authenticator;
 import authenticator.IAuthenticator;
 import contact_list.ContactList;
+import exceptions.RequestSelfException;
 import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
 import exceptions.InvalidRequestException;
@@ -51,6 +50,8 @@ public class AddFriend extends HttpServlet {
 			RedirectError(request, response, "Invalid Parameters");
 		} catch (InvalidRequestException e) {
 			RedirectError(request, response, "Invalid Request");
+		} catch (RequestSelfException e) {
+			RedirectError(request, response, "Can't request friendship from yourself!");
 		}
 	}
 

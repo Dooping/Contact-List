@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Random;
 
 import database.DatabaseConnection;
+import exceptions.AccessControlError;
 import exceptions.EmptyFieldException;
 import exceptions.UndefinedAccount;
 import exceptions.InvalidRequestException;
-import exceptions.PermissionNotExistsException;
+import exceptions.RequestSelfException;
 
 public class ContactList {
 	
@@ -35,9 +36,11 @@ public class ContactList {
 		return DatabaseConnection.getAccountId(username);
 	}
 	
-	public void newFriendRequest(String requester, String accepter) throws EmptyFieldException, InvalidRequestException{
+	public void newFriendRequest(String requester, String accepter) throws EmptyFieldException, InvalidRequestException, RequestSelfException{
 		if (requester.length() == 0 || accepter.length() == 0)
 			throw new EmptyFieldException();
+		if (requester.equals(accepter))
+			throw new RequestSelfException();
 		if(!DatabaseConnection.newFriendRequest(requester, accepter))
 			throw new InvalidRequestException();
 	}
@@ -81,7 +84,7 @@ public class ContactList {
 		DatabaseConnection.setUserDetails(cd);
 	}
 	
-	public String checkInformationPermission(String owner, String resourceName) throws PermissionNotExistsException{
+	public String checkInformationPermission(String owner, String resourceName) throws AccessControlError{
 		return DatabaseConnection.checkInformationPermission(owner, resourceName);
 	}
 	

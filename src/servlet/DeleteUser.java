@@ -18,7 +18,7 @@ import authenticator.Authenticator;
 import authenticator.IAuthenticator;
 import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
-import exceptions.PermissionNotExistsException;
+import exceptions.AccessControlError;
 import exceptions.UndefinedAccount;
 import exceptions.UserIsLoggedInException;
 import exceptions.UserNotLockedException;
@@ -54,7 +54,7 @@ public class DeleteUser extends HttpServlet {
 				HttpSession session = request.getSession(true);
 				session.setAttribute("capabilities", capabilities);
 				response.sendRedirect("/Authenticator/deleteuser.html");
-			} catch (PermissionNotExistsException e) {
+			} catch (AccessControlError e) {
 				RedirectError(request, response, "Username " + acc.getUsername() + " can't delete users!");
 			}
 		} catch (AuthenticationError e) {
@@ -90,7 +90,7 @@ public class DeleteUser extends HttpServlet {
 					authenticator.delete_account(aname);
 					RedirectSuccess(request, response, "User Deleted Successfully!");
 				}
-			} catch (PermissionNotExistsException e) {
+			} catch (AccessControlError e) {
 				RedirectError(request, response, "Username " + acc.getUsername() + " can't delete users!");
 			}
 		} catch (EmptyFieldException e) {

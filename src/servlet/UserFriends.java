@@ -19,7 +19,7 @@ import authenticator.IAuthenticator;
 import contact_list.ContactList;
 import database.DatabaseConnection;
 import exceptions.AuthenticationError;
-import exceptions.PermissionNotExistsException;
+import exceptions.AccessControlError;
 import exceptions.UndefinedAccount;
 import exceptions.WrongConfirmationPasswordException;
 
@@ -60,7 +60,7 @@ public class UserFriends extends HttpServlet {
 					capabilities.add(c);
 				}
 				session.setAttribute("capabilities", capabilities);
-			} catch (PermissionNotExistsException e) {
+			} catch (AccessControlError e) {
 				RedirectError(request, response, "You do not have permission to see this user's friend list!");
 			}
 			

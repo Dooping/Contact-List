@@ -18,7 +18,7 @@ import authenticator.Authenticator;
 import authenticator.IAuthenticator;
 import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
-import exceptions.PermissionNotExistsException;
+import exceptions.AccessControlError;
 import exceptions.UndefinedAccount;
 import exceptions.UserNotExistsException;
 import exceptions.WrongConfirmationPasswordException;
@@ -51,7 +51,7 @@ public class LockUser extends HttpServlet {
 				HttpSession session = request.getSession(true);
 				session.setAttribute("capabilities", capabilities);
 				response.sendRedirect("/Authenticator/lockuser.html");
-			} catch (PermissionNotExistsException e) {
+			} catch (AccessControlError e) {
 				RedirectError(request, response, "Username " + acc.getUsername() + " can't lock users!");
 			}
 		} catch (AuthenticationError e) {
@@ -88,7 +88,7 @@ public class LockUser extends HttpServlet {
 						authenticator.lock_user(username);
 						RedirectSuccess(request, response, "User Locked/Unlocked Successfully!");
 					}
-				} catch (PermissionNotExistsException e) {
+				} catch (AccessControlError e) {
 					RedirectError(request, response, "Username " + acc.getUsername() + " can't lock users!");
 				}
 			} catch (AuthenticationError e) {

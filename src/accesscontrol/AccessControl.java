@@ -2,15 +2,11 @@ package accesscontrol;
 
 import java.util.LinkedList;
 import java.util.List;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import authenticator.AESencrp;
 import authenticator.Account;
 import database.DatabaseConnection;
 import exceptions.AccessControlError;
-import exceptions.PermissionNotExistsException;
 import exceptions.UndefinedAccount;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,13 +16,13 @@ public class AccessControl {
 		
 	}
 	
-	public Capability makeCapability(String owner, String grantee, String resource, String operation,long time) throws PermissionNotExistsException{
+	public Capability makeCapability(String owner, String grantee, String resource, String operation,long time) throws AccessControlError{
 		try {
 			DatabaseConnection.checkPermission(grantee, resource, operation);
 			Account acc = DatabaseConnection.getAccount(owner);
 			return new Capability(owner, acc.getNonce(), grantee, resource, operation, time);
-		} catch (PermissionNotExistsException e) {
-			throw new PermissionNotExistsException();
+		} catch (AccessControlError e) {
+			throw new AccessControlError();
 		} catch (UndefinedAccount e) {
 			e.printStackTrace();
 		}
