@@ -17,6 +17,7 @@ import contact_list.ContactList;
 import exceptions.AuthenticationError;
 import exceptions.EmptyFieldException;
 import exceptions.InvalidRequestException;
+import exceptions.RequestSelfException;
 import exceptions.UndefinedAccount;
 import exceptions.WrongConfirmationPasswordException;
 
@@ -36,7 +37,6 @@ public class RemoveFriend extends HttpServlet {
 			IAuthenticator authenticator = new Authenticator();
 			Account authUser = authenticator.login(request,response);
 			String friend = request.getParameter("friendName");
-			System.out.println("friend: "+friend);
 			ContactList contactList = new ContactList();
 			contactList.deleteFriend(authUser.getUsername(), friend);
 			RedirectSuccess(request, response, "You and "+friend+" are no longer friends!");
@@ -51,6 +51,8 @@ public class RemoveFriend extends HttpServlet {
 			RedirectError(request, response, "Invalid Parameters");
 		} catch (InvalidRequestException e) {
 			RedirectError(request, response, "Invalid Request");
+		} catch (RequestSelfException e) {
+			RedirectError(request, response, "Can't delete yourself as friends");
 		}
 	}
 
