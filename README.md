@@ -9,7 +9,12 @@ Informações sobre a BD
 
 	O user e password de acesso à base de dados por defeito é 'root' e 'root', estes valores podem ser alterados na classe DatabaseConnection.java mudando as constantes USER e PASSWORD.
 
+# Pré-requisitos #
 
+Para correr o projecto são necessários os seguintes recursos:
+
+	- Apache Taglibs: https://tomcat.apache.org/download-taglibs.cgi 
+	- Json Simple: http://www.java2s.com/Code/Jar/j/Downloadjsonsimple111jar.htm
 
 # Testar a Aplicação #
 
