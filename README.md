@@ -22,7 +22,7 @@ Para testar a aplicação pode utilizar dois tipos de user:
 	A password de todos os utilizadores criados é 'root'.
 
 
-Pontos a considerar:
+# Pontos a Considerar #
 
 	Todos os utilizadores podem efectuar as operações pedidas no Handout 1
 
