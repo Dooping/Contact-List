@@ -33,8 +33,8 @@
 		    </thead>
 		    <tbody>
 		     	<c:forEach items="${list}" var="name">
-		     		<tr id="elem" onclick="{document.form.name.value='${name}';document.form.submit();}" >
-		            	<td id="username_${name}">${name}</td>
+		     		<tr id="elem" onclick="{document.form.name.value='${name.username}';document.form.submit();}" >
+		            	<td style='background-color:${name.locked ? "#b3b3b3" : ""}' >${name.username}</td>
 		        	</tr>
 			    </c:forEach>
 		    </tbody>
