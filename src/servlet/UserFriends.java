@@ -19,6 +19,7 @@ import authenticator.IAuthenticator;
 import contact_list.ContactList;
 import database.DatabaseConnection;
 import exceptions.AuthenticationError;
+import exceptions.LockedAccount;
 import exceptions.AccessControlError;
 import exceptions.UndefinedAccount;
 import exceptions.WrongConfirmationPasswordException;
@@ -51,6 +52,9 @@ public class UserFriends extends HttpServlet {
 			} else 
 				userPage = acc.getUsername();
 			
+			if(contactList.isLocked(userPage))
+				throw new LockedAccount();
+			
 			AccessControl acm = new AccessControl();
 			try{
 				List<Capability> capabilities = acm.getCapabilities(request);
@@ -75,6 +79,8 @@ public class UserFriends extends HttpServlet {
 		} catch (AuthenticationError e) {
 			request.getSession().setAttribute("origin", USER_FRIENDS);
 			response.sendRedirect("/Authenticator/login.html");
+		} catch (LockedAccount e) {
+			RedirectError(request, response, "This user does not exist");
 		} catch (Exception e) {
 			RedirectError(request, response, "Exception Error");
 		}

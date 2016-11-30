@@ -11,6 +11,7 @@ import exceptions.AccessControlError;
 import exceptions.EmptyFieldException;
 import exceptions.UndefinedAccount;
 import exceptions.InvalidRequestException;
+import exceptions.LockedAccount;
 import exceptions.RequestSelfException;
 
 public class ContactList {
@@ -120,6 +121,10 @@ public class ContactList {
 		Random rn = new Random();
 		int nonce = rn.nextInt();
 		DatabaseConnection.resetNonce(username, nonce);
+	}
+	
+	public boolean isLocked(String name) throws UndefinedAccount {
+		return DatabaseConnection.isLocked(name);
 	}
 	
 }

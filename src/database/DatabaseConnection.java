@@ -863,4 +863,30 @@ public final class DatabaseConnection {
 		}
 	}
 	
+	public static boolean isLocked(String name) throws UndefinedAccount{
+		Connection conn = connection();
+		//String query = "SELECT * FROM accounts WHERE name = '"+name+"'";
+		String sql = "SELECT locked FROM accounts WHERE name = ?";
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, name);
+			ResultSet set = st.executeQuery();
+			if(!set.first())
+				throw new UndefinedAccount();
+			Boolean accLocked = set.getBoolean("locked");
+			st.close();
+			return accLocked;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
 }
