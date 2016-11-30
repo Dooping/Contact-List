@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
+import authenticator.Account;
 import database.DatabaseConnection;
 import exceptions.AccessControlError;
 import exceptions.EmptyFieldException;
@@ -26,7 +27,7 @@ public class ContactList {
 		return DatabaseConnection.getFriendRequests(username);
 	}
 	
-	public List<String> listContacts(Boolean withLocked){
+	public List<Account> listContacts(Boolean withLocked){
 		return DatabaseConnection.getUserList(withLocked);
 	}
 

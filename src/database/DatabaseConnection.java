@@ -454,23 +454,24 @@ public final class DatabaseConnection {
 		return result;
 	}
 	
-	public static List<String> getUserList(Boolean withLocked){
+	public static List<Account> getUserList(Boolean withLocked){
 		Connection conn = connection();
 		
 		String sql;
 		if (withLocked)
-			sql = "select name from accounts";
+			sql = "select name, locked from accounts";
 		else
-			sql = "select name from accounts where locked = 0";
+			sql = "select name, locked from accounts where locked = 0";
 
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			ResultSet set = st.executeQuery();
-			List<String> names = new LinkedList<String>();
+			List<Account> names = new LinkedList<Account>();
 			while (set.next()) {
 				  String s = set.getString("name");
-				  names.add(s);
+				  boolean l = set.getBoolean("locked");
+				  names.add(new Account(s,null,true,l,-1));
 			}
 			st.close();
 			return names;

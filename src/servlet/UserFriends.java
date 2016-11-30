@@ -60,16 +60,16 @@ public class UserFriends extends HttpServlet {
 					capabilities.add(c);
 				}
 				session.setAttribute("capabilities", capabilities);
+				
+				List<String> friendList = contactList.listFriends(userPage);
+				int listSize = friendList.size();
+				request.setAttribute("listSize", listSize);
+				request.setAttribute("friends",friendList);
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("/userfriends.jsp");
+				requestDispatcher.forward(request, response);
 			} catch (AccessControlError e) {
 				RedirectError(request, response, "You do not have permission to see this user's friend list!");
 			}
-			
-			List<String> friendList = contactList.listFriends(userPage);
-			int listSize = friendList.size();
-			request.setAttribute("listSize", listSize);
-			request.setAttribute("friends",friendList);
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/userfriends.jsp");
-			requestDispatcher.forward(request, response);
 		} catch (WrongConfirmationPasswordException e) {
 			RedirectError(request, response, "Password confirmation did not match with the password");
 		} catch (AuthenticationError e) {
