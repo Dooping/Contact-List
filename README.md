@@ -15,7 +15,7 @@ Para correr o projecto são necessários os seguintes recursos:
 
 	- Apache Taglibs: https://tomcat.apache.org/download-taglibs.cgi 
 	- Json Simple: http://www.java2s.com/Code/Jar/j/Downloadjsonsimple111jar.htm
-	- Mysql Connector: https://dev.mysql.com/downloads/connector/j/
+	- Mysql Connector: https://dev.mysql.com/downloads/connector/j/ ou https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.40
 
 # Testar a Aplicação #
 
