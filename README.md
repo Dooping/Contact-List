@@ -1,41 +1,47 @@
-# Base de Dados #
+# Contact List
+## Software Security Final Project
+### Database
  
-Informações sobre a BD 
+Informations about DB 
 
-	- Programa: mySql
-	- correr o ficheiro ss.sql fornecido
+- Program: mySql
+- run the ss.sql file provided
 	
-	Será criada a base de dados SS com todas as tabelas necessárias e utilizadores para efeitos de teste.
+The SS database will be created with all the necessary tables and users for testing purposes.
 
-	O user e password de acesso à base de dados por defeito é 'root' e 'root', estes valores podem ser alterados na classe DatabaseConnection.java mudando as constantes USER e PASSWORD.
+The user and password for access to the database is 'root' and 'root', this values can be changes in the class DatabaseConnection.java by changing the constants USER and PASSWORD.
 
-# Pré-requisitos #
+### Pre-requisites
 
-Para correr o projecto são necessários os seguintes recursos:
+To run the project it is necessary the following resources:
 
 	- Apache Taglibs: https://tomcat.apache.org/download-taglibs.cgi 
 	- Json Simple: http://www.java2s.com/Code/Jar/j/Downloadjsonsimple111jar.htm
 	- Mysql Connector: https://dev.mysql.com/downloads/connector/j/ ou https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.40
 
-# Testar a Aplicação #
-
-Para testar a aplicação pode utilizar dois tipos de user:
+### Test Application
 	
-	Admin ( name:root ): Este utilizador poderá fazer loggin, criar novos utilizadores, apagar utilizadores, mudar a sua password, bloquear utilizadores e fazer logout. 
+- Admin ( name:root ): This user can do login, create new users, change own password, block users and do logout. 
 
-	Normal User (name: 1, 2, 3, 4, 5): Este tipo de utilizador pode fazer loggin, logout e mudar a sua password
+- Normal User ( name: 1, 2, 3, 4, 5 ): This type of user can do login, logout and change own password.
 
-	A password de todos os utilizadores criados é 'root'.
+- The default password of all created users is 'root'
+	
+
+### Points to consider
+
+It was designed and implemented a simple authenticator and user management system.
 
 
-# Pontos a Considerar #
+By default, profile data (job, birth date, age, place of birth, location), contacts (email, phone number) and internal description are only available for friends.
+The external description is available for everyone.
+The friendlist is private.
+It is possible to change all these visibility levels in the settings.
 
-	Todos os utilizadores podem efectuar as operações pedidas no Handout 1
+If a user wants to access a resource that is only visible to friends, he can make a friendship request and when the other user accepts he will be able to see all resources with internal permission.
 
-	Por defeito, os dados do perfil (profissão, data de nascimento, idade, naturalidade, localidade), os contactos (email, número de telefone) e a descrição interna estão apenas disponíveis aos amigos. A descrição externa está disponível para todos. A lista de amigos é privada. É possível alterar todos estes níveis de visibilidade nas settings.
+It was used a nouce of the resource's owner to sign Capabilities, thus allowing the system to verify if the capabilities were generated correctly, and also allowing the user to change permissions of the resources and revoke emitted capabilities from settings by just changing the nounce.
 
-	Se um utilizador quiser aceder a um recurso que está apenas disponível aos amigos pode fazer um pedido de amizade e quando o utilizador aceitar este vai poder aceder aos recursos com permissão interna.
+The user 'root' when seeing the full list of users (Contact List), sees also the users that are locked with a dark grey background, while the normal users only see non-locked users.
 
-	Utilizou-se o nonce do owner do recurso para assinar as Capabilities, permitindo assim verificar que as capabilities foram geradas correctamente e permitindo também que um utilizador ao mudar as permissões dos recursos nas Settings faça revoke de todas as Capabilities emitidas antes mudando apenas o nonce.
-
-	O utilizador 'root' ao ver a lista completa de utilizadores (Contact List) vê também os utilizadores que estão locked com fundo cinzento escuro, enquanto que os utilizadores normais apenas vêm os utilizadores que não estiverem locked.
+#### Final grade: 17/20
